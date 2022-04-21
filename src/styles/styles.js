@@ -15,7 +15,8 @@ const styles = StyleSheet.create({
         marginBottom: 15
     },
     buttonStyle:{
-        width: 122
+        width: 122,
+        borderRadius: 10
     },
     buttonRow:{
         display: "flex", 
