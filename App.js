@@ -17,11 +17,8 @@ export default function App(){
             <Stack.Screen options={{headerShown: false}} name="Login" component={Login} />
             <Stack.Screen options={{headerTitle: ""}}  name="Register" component={Register} />
           </Stack.Navigator>
-          
         </NavigationContainer>
-        
       </PaperProvider>
-  
   )
 }
 

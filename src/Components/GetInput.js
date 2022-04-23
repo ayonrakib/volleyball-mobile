@@ -9,7 +9,9 @@ export default function GetInput(props){
             autoCapitalize="none"
             style={styles.inputStyle}
             label={props.label}
+            value={props.value}
             secureTextEntry={props.secureTextEntry}
+            onChangeText= {props.SetText}
         />
     )
 }
