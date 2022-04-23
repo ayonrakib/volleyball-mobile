@@ -5,7 +5,7 @@ import GetInput from '../Components/GetInput';
 import styles from '../styles/styles';
 
 function reducer(stateDictionary, action){
-  console.log("came in reducer method");
+  console.log("came in reducer method of Login component!");
   // console.log("action is: ",action)
   // console.log("stateDictionary is: ",stateDictionary)
   switch(action.name){
@@ -32,10 +32,8 @@ const Login = ({navigation}) => {
   }
   return(
         <View style={styles.form}>
-          <TextInput label="text input email" style={styles.inputStyle} value={stateDictionary.email} onChangeText={(text)=> dispatch({name: "setEmail", data: { email: text}})} onPress={seeEmailValue}/>
-          {/* <TextInput label="text input password" style={styles.inputStyle} value={stateDictionary.password} onChangeText={(text)=> dispatch({name: "setPassword", data: { password: text}})} onPress={seeEmailValue}/> */}
-          <GetInput label="Email" secureTextEntry={false} value={stateDictionary.email} setText={dispatch}/>
-          {/* <GetInput label="Password" secureTextEntry={true} value={stateDictionary.password}/> */}
+          <GetInput label="Email" secureTextEntry={false} value={stateDictionary.email} setText={dispatch} textToChange="email" action="setEmail"/>
+          <GetInput label="Password" secureTextEntry={true} value={stateDictionary.password} setText={dispatch} textToChange="password" action="setPassword"/>
           <View style={styles.buttonRow}>
             <Button style={styles.buttonStyle} mode='contained' onPress={seeEmailValue}>Login</Button>
             <Button style={styles.buttonStyle} mode='contained' onPress={() => navigation.navigate('Register')}>Register</Button>
