@@ -11,7 +11,7 @@ export default function GetInput(props){
             label={props.label}
             value={props.value}
             secureTextEntry={props.secureTextEntry}
-            onChangeText= {props.SetText}
+            onChangeText={(text) => props.setText({ name: "setEmail" , data :{ email: text } })  } 
         />
     )
 }
