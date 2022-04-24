@@ -36,7 +36,6 @@ export default function Register(props){
                 <Button style={styles.buttonStyle} mode="contained" onPress={getStateValues}>Submit</Button>
                 <Button style={styles.buttonStyle} mode="contained" onPress={() => props.navigation.navigate('Login')}>Cancel</Button>
             </View>
-
         </View>
     )
 }
