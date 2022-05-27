@@ -6,6 +6,7 @@ import { Provider as PaperProvider } from "react-native-paper";
 import { Provider as StoreProvider } from "react-redux";
 import Login from "./src/screens/Login";
 import Register from "./src/screens/Register";
+import GetModal from "./src/screens/Modal";
 
 const Stack = createNativeStackNavigator();
 
@@ -14,6 +15,7 @@ export default function App(){
       <PaperProvider>
         <NavigationContainer>
           <Stack.Navigator>
+          <Stack.Screen options={{headerShown: false}} name="Modal" component={GetModal} />
             <Stack.Screen options={{headerShown: false}} name="Login" component={Login} />
             <Stack.Screen options={{headerTitle: ""}}  name="Register" component={Register} />
           </Stack.Navigator>
