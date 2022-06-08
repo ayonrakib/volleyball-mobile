@@ -5,6 +5,7 @@ import { Button, TextInput } from 'react-native-paper';
 import GetInput from '../Components/GetInput';
 import styles from '../styles/styles';
 import GetModal from '../screens/Modal';
+import AsyncStorageLib from '@react-native-async-storage/async-storage';
 
 function reducer(stateDictionary, action){
   // console.log("came in reducer method of Login component!");
@@ -31,7 +32,13 @@ function reducer(stateDictionary, action){
 const Login = ({navigation}) => {
   // console.log("Login component loaded!")
   const [stateDictionary, dispatch] = useReducer(reducer, {email: "", password: "", visible: false});
-  
+  const storeData = async () => {
+    try {
+      await AsyncStorageLib.setItem('@name', "rakib")
+    } catch (e) {
+      console.error(e)
+    }
+  }
   function seeEmailValue(){
     console.log("email value is: ",stateDictionary)
   }
@@ -58,8 +65,25 @@ const Login = ({navigation}) => {
         url:"http://192.168.1.88:8080/login-mariadb",
         data: stateDictionary
       }).then(response => {
-        console.log("the users are: ",response.data)
+        console.log("the response is: ",response.data)
+        storeData();
       }).catch(error => console.log(error))
+      const getData = async () => {
+        try {
+          const values = await AsyncStorageLib.getAllKeys()
+          if(values !== null) {
+            // value previously stored
+            console.log("async storage value is: ",values)
+          }
+          else{
+            console.log("null storage: ",values)
+          }
+        } catch(e) {
+          // error reading value
+          console.error(e)
+        }
+      }
+      getData()
   }
 
 
