@@ -16,7 +16,7 @@ const GetModal = () => {
           <Text>Example Modal.  Click outside this area to dismiss.</Text>
         </Modal>
       </Portal>
-      <Button style={{marginTop: 0}} onPress={showModal}>
+      <Button onPress={showModal}>
         Show
       </Button>
     </View>

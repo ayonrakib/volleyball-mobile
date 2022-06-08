@@ -17,27 +17,45 @@ function reducer(stateDictionary, action){
     case "setPassword":
       console.log("activated set password")
       return { ...stateDictionary, password: action.data.password }
+    case "showModal":
+      console.log("showing modal by value of visible: ",action.data.visible);
+      return stateDictionary;
+    case "hideModal":
+      console.log("Hiding Modal by value of visible: ",action.data.visible);
+      return stateDictionary;
     default:
       return stateDictionary;
   }
 }
 
 const Login = ({navigation}) => {
-  const [stateDictionary, dispatch] = useReducer(reducer, {email: "", password: ""});
+  // console.log("Login component loaded!")
+  const [stateDictionary, dispatch] = useReducer(reducer, {email: "", password: "", visible: false});
   
   function seeEmailValue(){
     console.log("email value is: ",stateDictionary)
   }
 
+
   function seePasswordValue(){
     console.log("password value is: ",stateDictionary.password)
   }
 
+
+  function showModal(){
+    dispatch({name: "showModal", data : { visible : true }});
+  }
+
+
+  function hideModal(){
+    dispatch({name: "hideModal", data: { visible : false }});
+  }
+
+
   function login(){
-  
       axios({
-        method: "get",
-        url:"http://192.168.1.88:8080/get-users-mariadb",
+        method: "post",
+        url:"http://192.168.1.88:8080/login-mariadb",
         data: stateDictionary
       }).then(response => {
         console.log("the users are: ",response.data)
@@ -56,7 +74,8 @@ const Login = ({navigation}) => {
           <View style={styles.buttonRow}>
             <GetModal/>
           </View>
-          
+          <Button onPress={showModal}>Show Modal!</Button>
+          <Button onPress={hideModal}>Hide Modal!</Button>
         </View>
     ) 
 };
