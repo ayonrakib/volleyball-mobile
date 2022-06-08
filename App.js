@@ -15,7 +15,7 @@ export default function App(){
       <PaperProvider>
         <NavigationContainer>
           <Stack.Navigator>
-          <Stack.Screen options={{headerShown: false}} name="Modal" component={GetModal} />
+            {/* <Stack.Screen options={{headerShown: false}} name="Modal" component={GetModal} /> */}
             <Stack.Screen options={{headerShown: false}} name="Login" component={Login} />
             <Stack.Screen options={{headerTitle: ""}}  name="Register" component={Register} />
           </Stack.Navigator>

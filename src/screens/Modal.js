@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Modal, Portal, Text, Button, Provider } from 'react-native-paper';
+import { View } from 'react-native';
 
 const GetModal = () => {
   const [visible, setVisible] = React.useState(false);
@@ -9,16 +10,16 @@ const GetModal = () => {
   const containerStyle = {backgroundColor: 'white', padding: 40};
 
   return (
-    <Provider>
+    <View>
       <Portal>
         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
           <Text>Example Modal.  Click outside this area to dismiss.</Text>
         </Modal>
       </Portal>
-      <Button style={{marginTop: 30}} onPress={showModal}>
+      <Button style={{marginTop: 0}} onPress={showModal}>
         Show
       </Button>
-    </Provider>
+    </View>
   );
 };
 

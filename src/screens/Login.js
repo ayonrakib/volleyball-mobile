@@ -4,6 +4,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Button, TextInput } from 'react-native-paper';
 import GetInput from '../Components/GetInput';
 import styles from '../styles/styles';
+import GetModal from '../screens/Modal';
 
 function reducer(stateDictionary, action){
   // console.log("came in reducer method of Login component!");
@@ -52,6 +53,10 @@ const Login = ({navigation}) => {
             <Button style={styles.buttonStyle} mode='contained' onPress={login}>Login</Button>
             <Button style={styles.buttonStyle} mode='contained' onPress={() => navigation.navigate('Register')}>Register</Button>
           </View>
+          <View style={styles.buttonRow}>
+            <GetModal/>
+          </View>
+          
         </View>
     ) 
 };
