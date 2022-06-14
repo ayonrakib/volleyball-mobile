@@ -82,6 +82,8 @@ const Login = ({navigation}) => {
 //      2.1. save that error message in state var and show it in helper text
 //    3. if authentic user:
 //      3.1. save session from response in react native storage lib
+
+// to do: delete cookie if authentication fails
   function login(){
       axios({
         method: "post",
@@ -107,6 +109,8 @@ const Login = ({navigation}) => {
           else{
             console.log("null storage: ",values)
           }
+          const sampleStoredDataInCookie = await AsyncStorageLib.getItem("@name");
+          console.log("sampleStoredDataInCookie:", sampleStoredDataInCookie);
         } catch(e) {
           // error reading value
           console.error(e)
