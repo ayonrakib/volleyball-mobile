@@ -79,7 +79,7 @@ const Login = ({navigation}) => {
 // method:
 //    1. send a post request to backend with email and password input
 //    2. if response is error message:
-//      2.1. save that error message in state var and show it in modal
+//      2.1. save that error message in state var and show it in helper text
 //    3. if authentic user:
 //      3.1. save session from response in react native storage lib
   function login(){
