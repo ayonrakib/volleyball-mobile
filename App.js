@@ -6,7 +6,7 @@ import { Provider as PaperProvider } from "react-native-paper";
 import { Provider as StoreProvider } from "react-redux";
 import Login from "./src/screens/Login";
 import Register from "./src/screens/Register";
-import Homepage from "./src/screens/HomePage";
+import Homepage from "./src/screens/Homepage";
 import GetModal from "./src/screens/Modal";
 
 const Stack = createNativeStackNavigator();

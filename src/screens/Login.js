@@ -1,4 +1,4 @@
-import React, {useReducer} from 'react';
+import React, {useReducer, useEffect} from 'react';
 import axios from 'axios';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button, TextInput, HelperText } from 'react-native-paper';
@@ -6,6 +6,7 @@ import GetInput from '../Components/GetInput';
 import styles from '../styles/styles';
 import GetModal from '../screens/Modal';
 import AsyncStorageLib from '@react-native-async-storage/async-storage';
+var _ = require('lodash');
 
 function reducer(stateDictionary, action){
   // console.log("came in reducer method of Login component!");
@@ -34,16 +35,81 @@ function reducer(stateDictionary, action){
   }
 }
 
+
+// login method
+// input: nothing
+// return: nothing
+// method:
+//    1. if a cookie is present:
+//      1.1. validate if the cookie is authentic
+//      1.2. if authentic:
+//        1.2.1. redirect to home page
+//      1.3. if not:
+//        1.3.1. delete cookie
+//    1. send a post request to backend with email and password input
+//    2. if response is error message:
+//      2.1. save that error message in state var and show it in helper text
+//      2.2. delete cookie
+//    3. if authentic user:
+//      3.1. save session from response in react native storage lib
+//      3.2. redirect to home page
+
+// to do: delete cookie if authentication fails
+
+
 const Login = ({navigation}) => {
   // console.log("Login component loaded!")
+  useEffect(()=>{
+    getData().then(response => {
+      console.log("response from get data method is: ",typeof response)
+      console.log("is response empty: ", _.isEqual(response, []))
+      if(_.isEqual(response, [])){
+        axios({
+          method: "post",
+          url: "http://192.168.1.88:8080/validate-cookie-mariadb",
+          data: response[0]
+        }).then(response => {
+          console.log("response from validate cookie mariadb url is: ",response)
+        }).catch(error => console.error(error))
+      }
+    })
+  },[])
+  
+  const getData = async () => {
+    try {
+      const values = await AsyncStorageLib.getAllKeys()
+      if(values !== null) {
+        // value previously stored
+        console.log("async storage keys are: ",values)
+      }
+      else{
+        console.log("null storage: ",values)
+      }
+      const sampleStoredDataInCookie = await AsyncStorageLib.getItem("@name");
+      console.log("sample Stored Data In Cookie:", sampleStoredDataInCookie);
+      return values
+    } catch(e) {
+      // error reading value
+      console.error(e)
+    }
+  }
+
   const [stateDictionary, dispatch] = useReducer(reducer, {email: "", password: "", visible: false, errorMessage: "", showErrorMessage: false});
   const storeData = async () => {
+    console.log("came into store data method!")
     try {
       await AsyncStorageLib.setItem('@name', "rakib")
     } catch (e) {
       console.error(e)
     }
   }
+
+  const removeSessionFromCookie = async() => {
+    console.log("came into remove session method!")
+    await AsyncStorageLib.removeItem("@name");
+  }
+
+
   function seeEmailValue(){
     console.log("email value is: ",stateDictionary)
   }
@@ -73,50 +139,29 @@ const Login = ({navigation}) => {
     dispatch({name: "hideErrorMessage", data: { showErrorMessage : false }});
   }
 
-// login method
-// input: nothing
-// return: nothing
-// method:
-//    1. send a post request to backend with email and password input
-//    2. if response is error message:
-//      2.1. save that error message in state var and show it in helper text
-//    3. if authentic user:
-//      3.1. save session from response in react native storage lib
 
-// to do: delete cookie if authentication fails
   function login(){
       axios({
         method: "post",
         url:"http://192.168.1.88:8080/login-mariadb",
         data: stateDictionary
       }).then(response => {
-        console.log("the response is: ",response.data)
+        // console.log("the response is: ",response.data)
         if(response.data.data === false){
           setErrorMessage(response.data.error.errorMessage)
+
+          removeSessionFromCookie()
+          getData()
         }
         else{
           hideErrorMessage()
+          storeData();
+          getData();
         }
-        storeData();
+        
       }).catch(error => console.log(error))
-      const getData = async () => {
-        try {
-          const values = await AsyncStorageLib.getAllKeys()
-          if(values !== null) {
-            // value previously stored
-            console.log("async storage value is: ",values)
-          }
-          else{
-            console.log("null storage: ",values)
-          }
-          const sampleStoredDataInCookie = await AsyncStorageLib.getItem("@name");
-          console.log("sampleStoredDataInCookie:", sampleStoredDataInCookie);
-        } catch(e) {
-          // error reading value
-          console.error(e)
-        }
-      }
-      getData()
+
+      
   }
 
 
@@ -131,11 +176,11 @@ const Login = ({navigation}) => {
             <Button style={styles.buttonStyle} mode='contained' onPress={login}>Login</Button>
             <Button style={styles.buttonStyle} mode='contained' onPress={() => navigation.navigate('Register')}>Register</Button>
           </View>
-          <View style={styles.buttonRow}>
+          {/* <View style={styles.buttonRow}>
             <GetModal/>
-          </View>
-          <Button onPress={showModal}>Show Modal!</Button>
-          <Button onPress={hideModal}>Hide Modal!</Button>
+          </View> */}
+          {/* <Button onPress={showModal}>Show Modal!</Button>
+          <Button onPress={hideModal}>Hide Modal!</Button> */}
         </View>
     ) 
 };
