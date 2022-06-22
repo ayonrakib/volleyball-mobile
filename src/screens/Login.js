@@ -54,27 +54,12 @@ function reducer(stateDictionary, action){
 //      3.1. save session from response in react native storage lib
 //      3.2. redirect to home page
 
-// to do: delete cookie if authentication fails
+
+// task: if cookie present, validate. if validated, redirect to homepage. if not, delete cookie.
 
 
 const Login = ({navigation}) => {
   // console.log("Login component loaded!")
-  useEffect(()=>{
-    getData().then(response => {
-      console.log("response from get data method is: ",typeof response)
-      console.log("is response empty: ", _.isEqual(response, []))
-      if(_.isEqual(response, [])){
-        axios({
-          method: "post",
-          url: "http://192.168.1.88:8080/validate-cookie-mariadb",
-          data: response[0]
-        }).then(response => {
-          console.log("response from validate cookie mariadb url is: ",response)
-        }).catch(error => console.error(error))
-      }
-    })
-  },[])
-  
   const getData = async () => {
     try {
       const values = await AsyncStorageLib.getAllKeys()
@@ -87,12 +72,31 @@ const Login = ({navigation}) => {
       }
       const sampleStoredDataInCookie = await AsyncStorageLib.getItem("@name");
       console.log("sample Stored Data In Cookie:", sampleStoredDataInCookie);
-      return values
+      return sampleStoredDataInCookie
     } catch(e) {
       // error reading value
       console.error(e)
     }
   }
+  useEffect(()=>{
+    getData().then(response => {
+      console.log("response from get data method is: ", response)
+      // console.log("is response empty: ", _.isEqual(response, []))
+      if(!(_.isEqual(response, []))){
+        axios({
+          method: "post",
+          url: "http://192.168.1.88:8080/validate-cookie-mariadb",
+          data: {
+            data: response
+          }
+        }).then(response => {
+          console.log("response from validate cookie mariadb url is: ",response)
+        }).catch(error => console.error(error))
+      }
+    })
+  },[])
+  
+
 
   const [stateDictionary, dispatch] = useReducer(reducer, {email: "", password: "", visible: false, errorMessage: "", showErrorMessage: false});
   const storeData = async () => {
