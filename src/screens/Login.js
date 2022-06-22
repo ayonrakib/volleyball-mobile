@@ -6,6 +6,7 @@ import GetInput from '../Components/GetInput';
 import styles from '../styles/styles';
 import GetModal from '../screens/Modal';
 import AsyncStorageLib from '@react-native-async-storage/async-storage';
+import Homepage from './Homepage';
 var _ = require('lodash');
 
 function reducer(stateDictionary, action){
@@ -90,19 +91,18 @@ const Login = ({navigation}) => {
             data: response
           }
         }).then(response => {
-          console.log("response from validate cookie mariadb url is: ",response)
+          console.log("response from validate cookie mariadb url is: ",response.data)
         }).catch(error => console.error(error))
       }
     })
   },[])
   
 
-
   const [stateDictionary, dispatch] = useReducer(reducer, {email: "", password: "", visible: false, errorMessage: "", showErrorMessage: false});
   const storeData = async () => {
     console.log("came into store data method!")
     try {
-      await AsyncStorageLib.setItem('@name', "rakib")
+      await AsyncStorageLib.setItem('@name', "a44a14e8a2b4323842ba12adbb6d5d92835885c5")
     } catch (e) {
       console.error(e)
     }
@@ -158,9 +158,13 @@ const Login = ({navigation}) => {
           getData()
         }
         else{
+          console.log("session saved in for the user logged in is:",response.data.data)
           hideErrorMessage()
-          storeData();
-          getData();
+          // storeData();
+          // getData();
+          if(response.data.data !== false){
+            navigation.navigate('Homepage')
+          }
         }
         
       }).catch(error => console.log(error))
