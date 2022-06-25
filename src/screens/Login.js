@@ -31,8 +31,12 @@ function reducer(stateDictionary, action){
       return { ...stateDictionary, errorMessage: action.data.errorMessage, showErrorMessage: true};
     case "hideErrorMessage":
       return { ...stateDictionary, showErrorMessage: false};
+    case "reloadComponent":
+      console.log("came into reloadComponent of dispatch!")
+      return { ...stateDictionary, reloadComponent: true};
     default:
       return stateDictionary;
+
   }
 }
 
@@ -60,7 +64,7 @@ function reducer(stateDictionary, action){
 
 
 const Login = ({navigation}) => {
-  // console.log("Login component loaded!")
+  console.log("Login component loaded!")
   const getData = async () => {
     try {
       const values = await AsyncStorageLib.getAllKeys()
@@ -80,6 +84,7 @@ const Login = ({navigation}) => {
     }
   }
   useEffect(()=>{
+    console.log("came inside useeffect of login method!")
     getData().then(response => {
       console.log("response from get data method is: ", response)
       // console.log("is response empty: ", _.isEqual(response, []))
@@ -92,17 +97,20 @@ const Login = ({navigation}) => {
           }
         }).then(response => {
           console.log("response from validate cookie mariadb url is: ",response.data)
+          if(response.data.data){
+            navigation.navigate('Homepage')
+          }
         }).catch(error => console.error(error))
       }
     })
-  },[])
+  })
   
 
-  const [stateDictionary, dispatch] = useReducer(reducer, {email: "", password: "", visible: false, errorMessage: "", showErrorMessage: false});
-  const storeData = async () => {
+  const [stateDictionary, dispatch] = useReducer(reducer, {email: "", password: "", visible: false, errorMessage: "", showErrorMessage: false, reloadComponent: false});
+  const storeData = async (session) => {
     console.log("came into store data method!")
     try {
-      await AsyncStorageLib.setItem('@name', "a44a14e8a2b4323842ba12adbb6d5d92835885c5")
+      await AsyncStorageLib.setItem('@name', session)
     } catch (e) {
       console.error(e)
     }
@@ -145,6 +153,7 @@ const Login = ({navigation}) => {
 
 
   function login(){
+    console.log("came in login method!")
       axios({
         method: "post",
         url:"http://192.168.1.88:8080/login-mariadb",
@@ -159,12 +168,13 @@ const Login = ({navigation}) => {
         }
         else{
           console.log("session saved in for the user logged in is:",response.data.data)
-          hideErrorMessage()
-          // storeData();
-          // getData();
-          if(response.data.data !== false){
-            navigation.navigate('Homepage')
-          }
+          hideErrorMessage();
+          storeData(response.data.data);
+          dispatch({name: "reloadComponent", data: { reloadComponent : true }})
+          getData();
+          // if(response.data.data !== false){
+          //   navigation.navigate('Homepage')
+          // }
         }
         
       }).catch(error => console.log(error))
