@@ -1,6 +1,6 @@
 import React, {useReducer} from 'react';
 import { View, Text } from "react-native";
-import { Button } from "react-native-paper";
+import { Button, Drawer, BottomNavigation } from "react-native-paper";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import styles from "../styles/styles";
 // import Login from "./Login";
@@ -16,6 +16,12 @@ function reducer(stateDictionary, action){
       return { ...stateDictionary, reloadComponent: true};
     }
   }
+
+const MusicRoute = () => <Text>Music</Text>;
+
+const AlbumsRoute = () => <Text>Albums</Text>;
+
+const RecentsRoute = () => <Text>Recents</Text>;
 
 export default function Homepage({navigation}){
   const getData = async () => {
@@ -57,6 +63,20 @@ export default function Homepage({navigation}){
       }
     })
   })
+  const [active, setActive] = React.useState('');
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: 'music', title: 'Favorites', focusedIcon: 'heart', unfocusedIcon: 'heart-outline'},
+    { key: 'albums', title: 'Albums', focusedIcon: 'album' },
+    { key: 'recents', title: 'Recents', focusedIcon: 'history' },
+    { key: 'notifications', title: 'Notifications', focusedIcon: 'bell', unfocusedIcon: 'bell-outline' },
+  ]);
+
+  const renderScene = BottomNavigation.SceneMap({
+    music: MusicRoute,
+    albums: AlbumsRoute,
+    recents: RecentsRoute,
+  });
   const [stateDictionary, dispatch] = useReducer(reducer, { reloadComponent: false });
     const getCookie = async () => {
         console.log("came into get cookie method!")
@@ -100,10 +120,11 @@ export default function Homepage({navigation}){
       }
     return(
         <View>
-            <Text>
-                Home page!
-            </Text>
-
+            <BottomNavigation
+              navigationState={{ index, routes }}
+              onIndexChange={setIndex}
+              renderScene={renderScene}
+            />
             <Button mode="contained" onPress={deleteCookie}>
                 Logout!
             </Button>

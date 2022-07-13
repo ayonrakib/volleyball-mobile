@@ -7,24 +7,27 @@ import { Provider as StoreProvider } from "react-redux";
 import Login from "./src/screens/Login";
 import Register from "./src/screens/Register";
 import Homepage from "./src/screens/Homepage";
+import { BottomNavigation } from "react-native-paper";
+import MyComponent from "./src/screens/BottomNavigation";
 import GetModal from "./src/screens/Modal";
 
 const Stack = createNativeStackNavigator();
 
 export default function App(){
   return (
-      <PaperProvider>
-        <NavigationContainer>
-          <Stack.Navigator>
-            {/* <Stack.Screen options={{headerShown: false}} name="Modal" component={GetModal} /> */}
+    <MyComponent />
+      // <PaperProvider>
+      //   <NavigationContainer>
+      //     <Stack.Navigator>
+      //       {/* <Stack.Screen options={{headerShown: false}} name="Modal" component={GetModal} /> */}
             
-            <Stack.Screen options={{headerShown: false}} name="Login" component={Login} />
-            <Stack.Screen options={{headerTitle: ""}}  name="Register" component={Register} />
-            <Stack.Screen options={{headerTitle: "", headerBackVisible: false}}  name="Homepage" component={Homepage} />
+      //       <Stack.Screen options={{headerShown: false}} name="Login" component={Login} />
+      //       <Stack.Screen options={{headerTitle: ""}}  name="Register" component={Register} />
+      //       <Stack.Screen options={{headerTitle: "", headerBackVisible: false}}  name="Homepage" component={Homepage} />
             
-          </Stack.Navigator>
-        </NavigationContainer>
-      </PaperProvider>
+      //     </Stack.Navigator>
+      //   </NavigationContainer>
+      // </PaperProvider>
   )
 }
 
