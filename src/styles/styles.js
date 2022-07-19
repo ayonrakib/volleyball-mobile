@@ -23,6 +23,35 @@ const styles = StyleSheet.create({
         flexDirection: "row", 
         justifyContent: "space-evenly",
         marginTop: 30
+    },
+    bottomNavigationIconStyle:{
+        marginBottom: 2,
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 5,
+        height: 25,
+        borderRadius: 5
+    },
+    bottomNavigationIconStyleActive:{
+        marginBottom: 2,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "black",
+        padding: 5,
+        height: 25,
+        borderRadius: 5
+    },
+    bottomNavigationTextStyle:{
+        color: "white",
+        marginTop: 2
+    },
+    bottomNavigationTextStyleActive:{
+        color: "black",
+        marginTop: 2
+    },
+    bottomNamvigationPressableBlock:{
+        width: 50,
+        alignItems: "center"
     }
   });
 

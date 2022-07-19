@@ -7,6 +7,7 @@ import styles from '../styles/styles';
 import GetModal from '../screens/Modal';
 import AsyncStorageLib from '@react-native-async-storage/async-storage';
 import Homepage from './Homepage';
+import HomeScreen from './HomeScreen';
 var _ = require('lodash');
 
 function reducer(stateDictionary, action){
@@ -98,7 +99,8 @@ const Login = ({navigation}) => {
         }).then(response => {
           console.log("response from validate cookie mariadb url is: ",response.data)
           if(response.data.data){
-            navigation.navigate('Homepage')
+            console.log("user authenticated in useeffect of login!")
+            navigation.navigate('HomeScreen')
           }
         }).catch(error => console.error(error))
       }
@@ -159,7 +161,7 @@ const Login = ({navigation}) => {
         url:"http://192.168.1.88:8080/login-mariadb",
         data: stateDictionary
       }).then(response => {
-        // console.log("the response is: ",response.data)
+        console.log("the response is: ",response.data)
         if(response.data.data === false){
           setErrorMessage(response.data.error.errorMessage)
 
