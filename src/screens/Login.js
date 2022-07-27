@@ -8,6 +8,7 @@ import GetModal from '../screens/Modal';
 import AsyncStorageLib from '@react-native-async-storage/async-storage';
 import Homepage from './Homepage';
 import HomeScreen from './HomeScreen';
+import {userService}  from '../service/UserService';
 var _ = require('lodash');
 
 function reducer(stateDictionary, action){
@@ -63,31 +64,35 @@ function reducer(stateDictionary, action){
 
 // task: if cookie present, validate. if validated, redirect to homepage. if not, delete cookie.
 
+// handle login:
+// 1. call user login which returns a promise
+// 2. attach a handler to promise which creates a dispatch if login is successful
 
+console.log("userService object is: ",userService)
 const Login = ({navigation}) => {
   console.log("Login component loaded!")
-  const getData = async () => {
-    try {
-      const values = await AsyncStorageLib.getAllKeys()
-      if(values !== null) {
-        // value previously stored
-        console.log("async storage keys are: ",values)
-      }
-      else{
-        console.log("null storage: ",values)
-      }
-      const sampleStoredDataInCookie = await AsyncStorageLib.getItem("@name");
-      console.log("sample Stored Data In Cookie:", sampleStoredDataInCookie);
-      return sampleStoredDataInCookie
-    } catch(e) {
-      // error reading value
-      console.error(e)
-    }
-  }
+  // const getData = async () => {
+  //   try {
+  //     const values = await AsyncStorageLib.getAllKeys()
+  //     if(values !== null) {
+  //       // value previously stored
+  //       console.log("async storage keys are: ",values)
+  //     }
+  //     else{
+  //       console.log("null storage: ",values)
+  //     }
+  //     const sampleStoredDataInCookie = await AsyncStorageLib.getItem("@name");
+  //     console.log("sample Stored Data In Cookie:", sampleStoredDataInCookie);
+  //     return sampleStoredDataInCookie
+  //   } catch(e) {
+  //     // error reading value
+  //     console.error(e)
+  //   }
+  // }
   useEffect(()=>{
     console.log("came inside useeffect of login method!")
-    getData().then(response => {
-      console.log("response from get data method is: ", response)
+    userService.getSession().then(response => {
+      console.log("response from get session method is: ", response)
       // console.log("is response empty: ", _.isEqual(response, []))
       if(!(_.isEqual(response, []))){
         axios({
@@ -102,6 +107,9 @@ const Login = ({navigation}) => {
             console.log("user authenticated in useeffect of login!")
             navigation.navigate('HomeScreen')
           }
+          else{
+            navigation.navigate('Login')
+          }
         }).catch(error => console.error(error))
       }
     })
@@ -109,19 +117,19 @@ const Login = ({navigation}) => {
   
 
   const [stateDictionary, dispatch] = useReducer(reducer, {email: "", password: "", visible: false, errorMessage: "", showErrorMessage: false, reloadComponent: false});
-  const storeData = async (session) => {
-    console.log("came into store data method!")
-    try {
-      await AsyncStorageLib.setItem('@name', session)
-    } catch (e) {
-      console.error(e)
-    }
-  }
+  // const storeData = async (session) => {
+  //   console.log("came into store data method!")
+  //   try {
+  //     await AsyncStorageLib.setItem(authenticationObject['session'], session)
+  //   } catch (e) {
+  //     console.error(e)
+  //   }
+  // }
 
-  const removeSessionFromCookie = async() => {
-    console.log("came into remove session method!")
-    await AsyncStorageLib.removeItem("@name");
-  }
+  // const removeSessionFromCookie = async() => {
+  //   console.log("came into remove session method!")
+  //   await AsyncStorageLib.removeItem("@name");
+  // }
 
 
   function seeEmailValue(){
@@ -154,34 +162,55 @@ const Login = ({navigation}) => {
   }
 
 
-  function login(){
-    console.log("came in login method!")
-      axios({
-        method: "post",
-        url:"http://192.168.1.88:8080/login-mariadb",
-        data: stateDictionary
-      }).then(response => {
-        console.log("the response is: ",response.data)
-        if(response.data.data === false){
-          setErrorMessage(response.data.error.errorMessage)
+  // function login(){
+  //   console.log("came in login method!")
+  //     axios({
+  //       method: "post",
+  //       url:"http://192.168.1.88:8080/login-mariadb",
+  //       data: stateDictionary
+  //     }).then(response => {
+  //       console.log("the response is: ",response.data)
+  //       if(response.data.data === false){
+  //         setErrorMessage(response.data.error.errorMessage)
 
-          removeSessionFromCookie()
-          getData()
-        }
-        else{
-          console.log("session saved in for the user logged in is:",response.data.data)
-          hideErrorMessage();
-          storeData(response.data.data);
-          dispatch({name: "reloadComponent", data: { reloadComponent : true }})
-          getData();
-          // if(response.data.data !== false){
-          //   navigation.navigate('Homepage')
-          // }
-        }
+  //         removeSessionFromCookie()
+  //         getData()
+  //       }
+  //       else{
+  //         console.log("session saved in for the user logged in is:",response.data.data)
+  //         hideErrorMessage();
+  //         storeData(response.data.data);
+  //         dispatch({name: "reloadComponent", data: { reloadComponent : true }})
+  //         getData();
+  //         // if(response.data.data !== false){
+  //         //   navigation.navigate('Homepage')
+  //         // }
+  //       }
         
-      }).catch(error => console.log(error))
+  //     }).catch(error => console.log(error))
+  // }
 
-      
+  // perform login
+  // input: nothing
+  // return: nothing, just perform login
+  // method:
+  //    1. call user service login method with state dict
+  //    2. if false returned:
+  //      2.1. delete session from react native async storage
+  //      2.2. show error message 
+  //    3. else:
+  //      3.1. hide error message
+  //      3.2. call dispatch to reload login component
+  async function performLogin(){
+    let isUserLoggedIn = await userService.login(stateDictionary.email, stateDictionary.password);
+    console.log("return from userservce.login: ",isUserLoggedIn)
+    if(!(isUserLoggedIn.data)){
+      userService.deleteSession();
+      setErrorMessage(isUserLoggedIn.error.errorMessage);
+    }
+    else{
+      dispatch({ name : "reloadComponent" , data : { reloadComponent : true }});
+    }
   }
 
 
@@ -193,7 +222,7 @@ const Login = ({navigation}) => {
           <GetInput label="Email" secureTextEntry={false} value={stateDictionary.email} setText={dispatch} textToChange="email" action="setEmail"/>
           <GetInput label="Password" secureTextEntry={true} value={stateDictionary.password} setText={dispatch} textToChange="password" action="setPassword"/>
           <View style={styles.buttonRow}>
-            <Button style={styles.buttonStyle} mode='contained' onPress={login}>Login</Button>
+            <Button style={styles.buttonStyle} mode='contained' onPress={performLogin}>Login</Button>
             <Button style={styles.buttonStyle} mode='contained' onPress={() => navigation.navigate('Register')}>Register</Button>
           </View>
           {/* <View style={styles.buttonRow}>
