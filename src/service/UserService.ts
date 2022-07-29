@@ -1,5 +1,7 @@
 import axios from "axios";
 import AsyncStorageLib from '@react-native-async-storage/async-storage';
+import { ApiError } from "../utils/exception";
+import { Response } from "../utils/rest";
 
 export class UserService{
     constructor(){
@@ -34,6 +36,107 @@ export class UserService{
     }
 
 
+    // get 7 days from now
+    // input: nothing
+    // return: 7 days in obj
+    // method:
+    //    1. get todays date
+    //    2. add 7 days to it
+    //    3. return the future date
+    getSevenDaysFromNow():Date{
+      let date = new Date();
+      let todayInString = date.toDateString();
+      console.log("today in string: ",todayInString)
+      date.setDate(date.getDate()+7)
+      let aWeekFromNowInString = date.toDateString();
+      console.log("a week from now: ",aWeekFromNowInString)
+      
+      let todayInObject = new Date(todayInString);
+      console.log("today in js object: ",todayInObject)
+      
+      let aWeekFromNowInObject = new Date(aWeekFromNowInString);
+      return aWeekFromNowInObject;
+    }
+
+
+    // save session
+    // input: session as string
+    // return: true if saved properly with expiry, false if not
+    // method:
+    //    1. create an authentication object with session and expiry date of 7 days
+    //    2. stringify the auth obj
+    //    3. try to save the obj in react native
+    //    4. if successful:
+    //      4.1. return true
+    //    5. return false
+    async saveSession(session:string):Promise<boolean>{
+      
+      const authentication = { 
+                                session : session, 
+                                expiry : this.getSevenDaysFromNow()
+                             }
+      const authenticationString = JSON.stringify(authentication);
+      try {
+        await AsyncStorageLib.setItem("authentication", authenticationString);
+        return true;
+      } catch (error) {
+        return false;
+      }
+    }
+
+
+
+    // delete session async method
+    // input: nothing
+    // return: true if deleted, fals eif nothing
+    // method:
+    //    1. try to delete authentication obj from react native storage lib
+    //    2. return true if succeeded
+    //    3. return false if failed
+    async deleteSession():Promise<boolean>{
+      try {
+        await AsyncStorageLib.removeItem("authentication");
+        return true;
+      } catch (error) {
+        return false;
+      }
+    }
+
+
+    // update session method
+    // input: Response obj
+    // return: true if saved successfully, false if not
+    // method:
+    //    1. if the Response object.data is null:
+    //      1.1. try to delete the session cookie
+    //      1.2. if delete is successful:
+    //        1.2.1. return true
+    //      1.3. else:
+    //        1.3.1. return false
+    //    2. else:
+    //      2.1. call save session method with response obj.data as param which also saves expiry of 7 days
+    //      2.2. return the value of saveSession method
+    async updateSession(response:any):Promise<boolean>{
+
+      if (response.data === null) {
+
+        return this.deleteSession();
+
+      } else {
+
+        return this.saveSession(response.data);
+
+      }
+    }
+    
+
+    // login method overview
+    // 1. validate email and password in the backend
+    // 2. update/delete session
+    // 3. return response
+
+
+
     // login method
     // input: email, password
     // return: true if authenticated, error message object if not
@@ -48,41 +151,41 @@ export class UserService{
     //      4.3. if save successful:
     //        4.3.1. return true
     //      4.4. return false
-    async login(email:string, password:string){
+    async login(email:string, password:string):Promise<{data: boolean, error: {} | null}>{
       console.log("came in login method!")
       var stateDictionary = {
         email: email,
         password: password
       }
+
       let loginResponse = await axios.post("http://192.168.1.88:8080/login-mariadb", stateDictionary);
       console.log("response from login-mariadb in await axios: ",loginResponse.data)
-      if(!(loginResponse.data.data)){
-        console.log("user not authenticated in user service!")
-        this.deleteSession();
-        return (loginResponse.data)
-      }
-      else{
-        console.log("user authenticated in user service!")
-        if(this.storeSession(loginResponse.data.data)){
-            return(
-              {
-                data : true,
-                error: ""
-              }
-            )
-          }
-          else{
-            return(
-              {
-                data : false,
-                error:  {
-                  errorCode: 600,
-                  errorMessage: "Please retry logging in again!",
-                },
-              }
-            )
-          }
-      }
+
+      const error = ApiError.fromApiError(loginResponse.data.error); 
+      let response = new Response(loginResponse.data.data, error);
+
+      console.log("response in login is: ",response)
+      return {data: true, error: null}
+
+      // if(!(loginResponse.data.data)){
+      //   console.log("user not authenticated in user service!")
+      //   this.deleteSession();
+      //   return (loginResponse.data)
+      // }
+      // else{
+      //   console.log("user authenticated in user service!")
+        
+      //   if (this.storeSession(loginResponse.data.data)) {
+
+      //     return new Response(true, null);
+
+      //   } else {
+
+      //     const error = new ApiError(loginResponse.data.error.errorCode, loginResponse.data.error.errorMessage);
+      //     return new Response(null, error)
+
+      //   }
+      // }
       // axios({
       //   method: "post",
       //   url:"http://192.168.1.88:8080/login-mariadb",
@@ -206,23 +309,17 @@ export class UserService{
     //    6.1. return false
 
 
-    // delete session async method
-    // input: nothing
-    // return: true if deleted, fals eif nothing
-    // method:
-    //    1. try to delete session from react native storage lib
-    //    2. return true if succeeded
-    //    3. return false if failed
-    async deleteSession(){
-      var authenticationObject:any;
-      try{
-        await AsyncStorageLib.removeItem("session");
-        return true;
-      }
-      catch(e){
-        return false;
-      }
-    }
+
+    // async deleteSession(){
+    //   var authenticationObject:any;
+    //   try{
+    //     await AsyncStorageLib.removeItem("session");
+    //     return true;
+    //   }
+    //   catch(e){
+    //     return false;
+    //   }
+    // }
 
 
     // create user method
