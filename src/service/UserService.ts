@@ -9,11 +9,24 @@ export class UserService{
     }
     // check korbe shudhu matro unexpired auth key ase kina
     // sync method => sathe sathe true false return pabe, no promise
-    isLoggedIn () {
-        this.currentSession().then(response => {
-            console.log("current session in the user service file is: ",response)
-        })
-        return true;
+    async isLoggedIn () {
+
+      console.log("came in isloggedin user service method!");
+      const currentSavedSession = await userService.getSession();
+      console.log("currentSavedSession in islogged in method in user service: ",currentSavedSession)
+  
+      if (currentSavedSession !== null) {
+
+        const loginResponse = await axios.post("http://192.168.1.88:8080/validate-cookie-mariadb", { data: currentSavedSession.session });
+        console.log("loginResponse.data in islogged in method in user service: ",loginResponse.data)
+        return loginResponse;
+      }
+
+      return ({
+        data: false, 
+        error: null
+      })
+      
     }
 
     currentSession = async () => {
@@ -70,14 +83,17 @@ export class UserService{
     //      4.1. return true
     //    5. return false
     async saveSession(session:string):Promise<boolean>{
-      
+      console.log("session in saveSession method is userservice is: ",session)
       const authentication = { 
-                                session : session, 
+                                session : session,
                                 expiry : this.getSevenDaysFromNow()
                              }
       const authenticationString = JSON.stringify(authentication);
+      console.log("authenticationString in saveSession method is userservice is: ",authenticationString)
       try {
         await AsyncStorageLib.setItem("authentication", authenticationString);
+        var currentSessionSaved = await AsyncStorageLib.getItem("authentication");
+        console.log("currenSession in saveSession method in user service is: ",currentSessionSaved)
         return true;
       } catch (error) {
         return false;
@@ -116,15 +132,15 @@ export class UserService{
     //    2. else:
     //      2.1. call save session method with response obj.data as param which also saves expiry of 7 days
     //      2.2. return the value of saveSession method
-    async updateSession(response:any):Promise<boolean>{
-
-      if (response.data === null) {
+    async updateSession(session:string | null):Promise<boolean>{
+      console.log("session in update session is: ",session)
+      if (session === null) {
 
         return this.deleteSession();
 
       } else {
 
-        return this.saveSession(response.data);
+        return this.saveSession(session);
 
       }
     }
@@ -165,71 +181,30 @@ export class UserService{
       let response = new Response(loginResponse.data.data, error);
 
       console.log("response in login is: ",response)
-      return {data: true, error: null}
+      console.log("response data in uservice is: ",response.data)
+      console.log("response error in uservice is: ",response.error)
+      // console.log("response error message of Error in uservice is: ", response.error.message)
 
-      // if(!(loginResponse.data.data)){
-      //   console.log("user not authenticated in user service!")
-      //   this.deleteSession();
-      //   return (loginResponse.data)
-      // }
-      // else{
-      //   console.log("user authenticated in user service!")
-        
-      //   if (this.storeSession(loginResponse.data.data)) {
+      if (response.data === null) {
 
-      //     return new Response(true, null);
+        if (this.deleteSession()) {
+          console.log("response error message of Error in unauthentication in uservice is: ", response.error.message)
+          return { data : false, error: response };
 
-      //   } else {
+        }
 
-      //     const error = new ApiError(loginResponse.data.error.errorCode, loginResponse.data.error.errorMessage);
-      //     return new Response(null, error)
+      } else {
+        if(this.updateSession(response.data)) {
 
-      //   }
-      // }
-      // axios({
-      //   method: "post",
-      //   url:"http://192.168.1.88:8080/login-mariadb",
-      //   data: stateDictionary
-      // }).then(response => {
-      //   console.log("the response is: ",response.data)
-      //   if(response.data.data === false){
+          return {data: true, error: null};
 
-      //     this.deleteSession()
-      //     this.getSession()
-      //     loginResponse = {
-      //       data : false,
-      //       error : response.data.error
-      //     };
-      //     return loginResponse;
-      //   }
-      //   else{
-      //     console.log("session saved in for the user logged in is:",response.data.data)
+        } else {
 
-      //     if(this.storeSession(response.data.data)){
-      //       loginResponse = {
-      //         data : true,
-      //         error : ""
-      //       }
-      //       return loginResponse;
-      //     }
+          return {data: false, error: null};
 
-      //     this.getSession()
-      //     // if(response.data.data !== false){
-      //     //   navigation.navigate('Homepage')
-      //     // }
-      //   }
-        
-      // }).catch(error => console.log(error)).finally(
-      //   () => {
-      //     return loginResponse;
-      //   }
-      // )
-      
+        }
+      }
     }
-
-
-
-    // logout method
 
 
     // get session
@@ -244,17 +219,18 @@ export class UserService{
     async getSession(){
       var authenticationObject:any;
       try {
-        const values = await AsyncStorageLib.getAllKeys()
-        if(values !== null) {
-          // value previously stored
-          console.log("async storage keys are: ",values)
-        }
-        else{
-          console.log("null storage: ",values)
-        }
-        const sampleStoredDataInCookie = await AsyncStorageLib.getItem("session");
+        // const values = await AsyncStorageLib.getAllKeys()
+        // if(values !== null) {
+        //   // value previously stored
+        //   console.log("async storage keys are: ",values)
+        // }
+        // else{
+        //   console.log("null storage: ",values)
+        // }
+        const sampleStoredDataInCookie = await AsyncStorageLib.getItem("authentication");
         console.log("sample Stored Data In Cookie:", sampleStoredDataInCookie);
-        return sampleStoredDataInCookie
+        const JSONParsedSession = JSON.parse(sampleStoredDataInCookie);
+        return JSONParsedSession
       } catch(e) {
         // error reading value
         console.log("there was an error reading sessions in getSession method!: ",e)

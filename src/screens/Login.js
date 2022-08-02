@@ -36,6 +36,9 @@ function reducer(stateDictionary, action){
     case "reloadComponent":
       console.log("came into reloadComponent of dispatch!")
       return { ...stateDictionary, reloadComponent: true};
+    case "clearCredentials":
+      console.log("came inside clear credentials of dispatch in Login!");
+      return { ...stateDictionary, email : "", password : "" }
     default:
       return stateDictionary;
 
@@ -71,49 +74,28 @@ function reducer(stateDictionary, action){
 console.log("userService object is: ",userService)
 const Login = ({navigation}) => {
   console.log("Login component loaded!")
-  // const getData = async () => {
-  //   try {
-  //     const values = await AsyncStorageLib.getAllKeys()
-  //     if(values !== null) {
-  //       // value previously stored
-  //       console.log("async storage keys are: ",values)
-  //     }
-  //     else{
-  //       console.log("null storage: ",values)
-  //     }
-  //     const sampleStoredDataInCookie = await AsyncStorageLib.getItem("@name");
-  //     console.log("sample Stored Data In Cookie:", sampleStoredDataInCookie);
-  //     return sampleStoredDataInCookie
-  //   } catch(e) {
-  //     // error reading value
-  //     console.error(e)
-  //   }
-  // }
-  useEffect(()=>{
+  useEffect(async ()=>{
     console.log("came inside useeffect of login method!")
-    userService.getSession().then(response => {
-      console.log("response from get session method is: ", response)
-      // console.log("is response empty: ", _.isEqual(response, []))
-      if(!(_.isEqual(response, []))){
-        axios({
-          method: "post",
-          url: "http://192.168.1.88:8080/validate-cookie-mariadb",
-          data: {
-            data: response
-          }
-        }).then(response => {
-          console.log("response from validate cookie mariadb url is: ",response.data)
-          if(response.data.data){
-            console.log("user authenticated in useeffect of login!")
-            navigation.navigate('HomeScreen')
-          }
-          else{
-            navigation.navigate('Login')
-          }
-        }).catch(error => console.error(error))
+    const isUserLoggedIn = await userService.isLoggedIn();
+    console.log("is user logged in response from userservice in useeffect: ",isUserLoggedIn);
+
+    if (isUserLoggedIn !== undefined) {
+      
+      if (isUserLoggedIn.data.data) {
+    
+        console.log("user authenticated in useeffect of login!")
+        navigation.navigate("HomeScreen")
+  
+      } else {
+  
+        userService.deleteSession();
+        dispatch( {name: "clearCredentials",data:""})
+  
       }
-    })
-  })
+
+    }
+  }, []
+)
   
 
   const [stateDictionary, dispatch] = useReducer(reducer, {email: "", password: "", visible: false, errorMessage: "", showErrorMessage: false, reloadComponent: false});
@@ -204,12 +186,27 @@ const Login = ({navigation}) => {
   async function performLogin(){
     let isUserLoggedIn = await userService.login(stateDictionary.email, stateDictionary.password);
     console.log("return from userservce.login: ",isUserLoggedIn)
-    if(!(isUserLoggedIn.data)){
-      userService.deleteSession();
-      setErrorMessage(isUserLoggedIn.error.errorMessage);
-    }
-    else{
-      dispatch({ name : "reloadComponent" , data : { reloadComponent : true }});
+    // if(!(isUserLoggedIn.data)){
+    //   userService.deleteSession();
+    //   setErrorMessage(isUserLoggedIn.error.errorMessage);
+    // }
+    // else{
+    //   dispatch({ name : "reloadComponent" , data : { reloadComponent : true }});
+    // }
+    console.log("user service login method response in login component is: ", isUserLoggedIn)
+
+    if (isUserLoggedIn.data) {
+      console.log("isUserLoggedIn.data in performLogin method: ",isUserLoggedIn.data)
+      hideErrorMessage();
+      dispatch( {name : "reloadComponent" , data : { reloadComponent : true }} )
+
+    } else {
+      console.log("isUserLoggedIn.data in performLogin method: ",isUserLoggedIn.data)
+      console.log("isUserLoggedIn.error in performLogin method: ",isUserLoggedIn.error)
+      console.log("isUserLoggedIn.error.error in performLogin method: ",isUserLoggedIn.error.error)
+      console.log("isUserLoggedIn.error.error.errorMessage in performLogin method: ",isUserLoggedIn.error.error.message)
+      setErrorMessage(isUserLoggedIn.error.error.message)
+
     }
   }
 
