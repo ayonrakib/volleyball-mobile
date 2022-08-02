@@ -5,6 +5,7 @@ import { Button, Paragraph, Dialog, Portal, Provider, Modal } from "react-native
 import GetInput from "../Components/GetInput";
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { userService } from "../service/UserService";
 var _ = require('lodash');
 function reducer(stateDictionary, action){
     console.log("came into reducer of Register component!")
@@ -31,53 +32,26 @@ export default function Register(props){
 
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
-    const storeData = async (session) => {
-        console.log("came into store data method!")
-        try {
-          await AsyncStorageLib.setItem('@name', session)
-        } catch (e) {
-          console.error(e)
+      useEffect(async ()=>{
+        console.log("came inside useeffect of register method!")
+        const isUserLoggedIn = await userService.isLoggedIn();
+        console.log("is user logged in response from userservice in useeffect: ",isUserLoggedIn);
+        if (isUserLoggedIn !== undefined) {
+      
+          if (isUserLoggedIn.data.data) {
+        
+            console.log("user authenticated in useeffect of login!")
+            navigation.navigate("HomeScreen")
+      
+          } else {
+      
+            userService.deleteSession();
+            dispatch( {name: "clearCredentials",data:""})
+      
+          }
+    
         }
-      }
-    const getData = async () => {
-        try {
-          const values = await AsyncStorageLib.getAllKeys()
-          if(values !== null) {
-            // value previously stored
-            console.log("async storage keys are: ",values)
-          }
-          else{
-            console.log("null storage: ",values)
-          }
-          const sampleStoredDataInCookie = await AsyncStorageLib.getItem("@name");
-          console.log("sample Stored Data In Cookie:", sampleStoredDataInCookie);
-          return sampleStoredDataInCookie
-        } catch(e) {
-          // error reading value
-          console.error(e)
-        }
-      }
-      useEffect(()=>{
-        console.log("came inside useeffect of login method!")
-        getData().then(response => {
-          console.log("response from get data method is: ", response)
-          // console.log("is response empty: ", _.isEqual(response, []))
-          if(!(_.isEqual(response, []))){
-            axios({
-              method: "post",
-              url: "http://192.168.1.88:8080/validate-cookie-mariadb",
-              data: {
-                data: response
-              }
-            }).then(response => {
-              console.log("response from validate cookie mariadb url is: ",response.data)
-              if(response.data.data){
-                props.navigation.navigate('Homepage')
-              }
-            }).catch(error => console.error(error))
-          }
-        })
-      })
+      },[])
     const containerStyle = {backgroundColor: 'white', padding: 20};
     const [errorExplanation, setErrorExplanation] = React.useState("");
 
@@ -86,26 +60,28 @@ export default function Register(props){
     }
 
 
-    function register(){
+    async function register(){
         console.log("came in register method!")
+        const registrationResponse = await userService.registerInMariadb(stateDictionary);
+        console.log("registrationResponse in register method in register component: ",registrationResponse)
         
-        axios({
-            method: "POST",
-            url: "http://192.168.1.88:8080/register-mariadb",
-            data: stateDictionary
-        }).then(response => {
-            console.log("response from register in mariadb is: ",response.data)
-            if(!(response.data.data)){
-                console.log("response.data.data is false!")
-                showModal()
-                setErrorExplanation(response.data.error.errorMessage);
-            }
-            else{
-                console.log("response from register in mariadb is: ",response.data)
-                storeData(response.data.data);
-                dispatch({name: "reloadComponent", data: { reloadComponent : true }})
-            }
-        }).catch(error => console.error(error))
+        // axios({
+        //     method: "POST",
+        //     url: "http://192.168.1.88:8080/register-mariadb",
+        //     data: stateDictionary
+        // }).then(response => {
+        //     console.log("response from register in mariadb is: ",response.data)
+        //     if(!(response.data.data)){
+        //         console.log("response.data.data is false!")
+        //         showModal()
+        //         setErrorExplanation(response.data.error.errorMessage);
+        //     }
+        //     else{
+        //         console.log("response from register in mariadb is: ",response.data)
+        //         storeData(response.data.data);
+        //         dispatch({name: "reloadComponent", data: { reloadComponent : true }})
+        //     }
+        // }).catch(error => console.error(error))
     }
 
     return (

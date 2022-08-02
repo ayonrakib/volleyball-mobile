@@ -207,6 +207,24 @@ export class UserService{
     }
 
 
+    // register-mariadb
+    // input: dictionary of first name, last name, email, password
+    // return: session if successfully created user, null if not
+    // method:
+    //    1. call back end url with first name, last name, email, password
+    //    2. if response data is null:
+    //      2.1. show the error message in the screen
+    //    3. else:
+    //      3.1. save the session in the react native async storage
+    //      3.2. reload component
+   async registerInMariadb(stateDictionary : any) {
+    // console.log("state dict in registerInMariadb method in user service is: ",stateDictionary)
+    const registrationResponse = await axios.post("http://192.168.1.88:8080/register-mariadb",stateDictionary);
+    console.log("response from register-mariadb in registerInMariadb method in user service is: ",registrationResponse.data);
+    return registrationResponse.data
+   }
+
+
     // get session
     // input: nothing
     // return: session if created, false if not
@@ -219,14 +237,6 @@ export class UserService{
     async getSession(){
       var authenticationObject:any;
       try {
-        // const values = await AsyncStorageLib.getAllKeys()
-        // if(values !== null) {
-        //   // value previously stored
-        //   console.log("async storage keys are: ",values)
-        // }
-        // else{
-        //   console.log("null storage: ",values)
-        // }
         const sampleStoredDataInCookie = await AsyncStorageLib.getItem("authentication");
         console.log("sample Stored Data In Cookie:", sampleStoredDataInCookie);
         const JSONParsedSession = JSON.parse(sampleStoredDataInCookie);
@@ -272,30 +282,6 @@ export class UserService{
         return false;
       }
     }
-
-    // 1. assigned empty auth obj
-    // 2. created date obj
-    // 3. created today date in str
-    // 4. created one week from now str
-    // 5. try
-    //    5.1. in async storage, store auth obj[session] = session
-    //    5.2. in async storage, store auth obj[expiry] = a week from now str
-    //    5.3. return true
-    // 6. if error:
-    //    6.1. return false
-
-
-
-    // async deleteSession(){
-    //   var authenticationObject:any;
-    //   try{
-    //     await AsyncStorageLib.removeItem("session");
-    //     return true;
-    //   }
-    //   catch(e){
-    //     return false;
-    //   }
-    // }
 
 
     // create user method
