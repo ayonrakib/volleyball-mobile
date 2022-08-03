@@ -29,25 +29,6 @@ export class UserService{
       
     }
 
-    currentSession = async () => {
-        try {
-            const values = await AsyncStorageLib.getAllKeys()
-            if(values !== null) {
-              // value previously stored
-              console.log("async storage keys are: ",values)
-            }
-            else{
-              console.log("null storage: ",values)
-            }
-            const sampleStoredDataInCookie = await AsyncStorageLib.getItem("@name");
-            console.log("sample Stored Data In Cookie:", sampleStoredDataInCookie);
-            return sampleStoredDataInCookie
-          } catch(e) {
-            // error reading value
-            console.error(e)
-          }
-    }
-
 
     // get 7 days from now
     // input: nothing
