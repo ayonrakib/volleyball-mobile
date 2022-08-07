@@ -5,7 +5,6 @@ import { Button, TextInput, HelperText } from 'react-native-paper';
 import GetInput from '../Components/GetInput';
 import styles from '../styles/styles';
 import GetModal from '../screens/Modal';
-import AsyncStorageLib from '@react-native-async-storage/async-storage';
 import Homepage from './Homepage';
 import HomeScreen from './HomeScreen';
 import {userService}  from '../service/UserService';
@@ -46,38 +45,13 @@ function reducer(stateDictionary, action){
 }
 
 
-// login method
-// input: nothing
-// return: nothing
-// method:
-//    1. if a cookie is present:
-//      1.1. validate if the cookie is authentic
-//      1.2. if authentic:
-//        1.2.1. redirect to home page
-//      1.3. if not:
-//        1.3.1. delete cookie
-//    1. send a post request to backend with email and password input
-//    2. if response is error message:
-//      2.1. save that error message in state var and show it in helper text
-//      2.2. delete cookie
-//    3. if authentic user:
-//      3.1. save session from response in react native storage lib
-//      3.2. redirect to home page
-
-
-// task: if cookie present, validate. if validated, redirect to homepage. if not, delete cookie.
-
-// handle login:
-// 1. call user login which returns a promise
-// 2. attach a handler to promise which creates a dispatch if login is successful
-
-console.log("userService object is: ",userService)
+// console.log("userService object is: ",userService)
 const Login = ({navigation}) => {
   console.log("Login component loaded!")
   useEffect(async ()=>{
     console.log("came inside useeffect of login method!")
     const isUserLoggedIn = await userService.isLoggedIn();
-    console.log("is user logged in response from userservice in useeffect: ",isUserLoggedIn);
+    console.log("is user logged in response from userservice in useeffect: ",isUserLoggedIn.data);
 
     if (isUserLoggedIn !== undefined) {
       
@@ -92,28 +66,13 @@ const Login = ({navigation}) => {
         dispatch( {name: "clearCredentials",data:""})
   
       }
-
     }
-  }, []
-)
-  
+  }, [])
+
 
   const [stateDictionary, dispatch] = useReducer(reducer, {email: "", password: "", visible: false, errorMessage: "", showErrorMessage: false, reloadComponent: false});
-  // const storeData = async (session) => {
-  //   console.log("came into store data method!")
-  //   try {
-  //     await AsyncStorageLib.setItem(authenticationObject['session'], session)
-  //   } catch (e) {
-  //     console.error(e)
-  //   }
-  // }
 
-  // const removeSessionFromCookie = async() => {
-  //   console.log("came into remove session method!")
-  //   await AsyncStorageLib.removeItem("@name");
-  // }
-
-
+  
   function seeEmailValue(){
     console.log("email value is: ",stateDictionary)
   }
@@ -144,34 +103,6 @@ const Login = ({navigation}) => {
   }
 
 
-  // function login(){
-  //   console.log("came in login method!")
-  //     axios({
-  //       method: "post",
-  //       url:"http://192.168.1.88:8080/login-mariadb",
-  //       data: stateDictionary
-  //     }).then(response => {
-  //       console.log("the response is: ",response.data)
-  //       if(response.data.data === false){
-  //         setErrorMessage(response.data.error.errorMessage)
-
-  //         removeSessionFromCookie()
-  //         getData()
-  //       }
-  //       else{
-  //         console.log("session saved in for the user logged in is:",response.data.data)
-  //         hideErrorMessage();
-  //         storeData(response.data.data);
-  //         dispatch({name: "reloadComponent", data: { reloadComponent : true }})
-  //         getData();
-  //         // if(response.data.data !== false){
-  //         //   navigation.navigate('Homepage')
-  //         // }
-  //       }
-        
-  //     }).catch(error => console.log(error))
-  // }
-
   // perform login
   // input: nothing
   // return: nothing, just perform login
@@ -186,13 +117,7 @@ const Login = ({navigation}) => {
   async function performLogin(){
     let isUserLoggedIn = await userService.login(stateDictionary.email, stateDictionary.password);
     console.log("return from userservce.login: ",isUserLoggedIn)
-    // if(!(isUserLoggedIn.data)){
-    //   userService.deleteSession();
-    //   setErrorMessage(isUserLoggedIn.error.errorMessage);
-    // }
-    // else{
-    //   dispatch({ name : "reloadComponent" , data : { reloadComponent : true }});
-    // }
+
     console.log("user service login method response in login component is: ", isUserLoggedIn)
 
     if (isUserLoggedIn.data) {

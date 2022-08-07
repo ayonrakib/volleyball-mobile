@@ -93,6 +93,7 @@ export class UserService{
     async deleteSession():Promise<boolean>{
       try {
         await AsyncStorageLib.removeItem("authentication");
+        console.log("deleted authentication session!")
         return true;
       } catch (error) {
         return false;
@@ -159,6 +160,7 @@ export class UserService{
       console.log("response from login-mariadb in await axios: ",loginResponse.data)
 
       const error = ApiError.fromApiError(loginResponse.data.error); 
+      console.log("error in login method in user service: ",error)
       let response = new Response(loginResponse.data.data, error);
 
       console.log("response in login is: ",response)
@@ -175,7 +177,7 @@ export class UserService{
         }
 
       } else {
-        if(this.updateSession(response.data)) {
+        if(this.updateSession(response.data.data)) {
 
           return {data: true, error: null};
 
@@ -199,10 +201,27 @@ export class UserService{
     //      3.1. save the session in the react native async storage
     //      3.2. reload component
    async registerInMariadb(stateDictionary : any) {
-    // console.log("state dict in registerInMariadb method in user service is: ",stateDictionary)
+    console.log("state dict in registerInMariadb method in user service is: ",stateDictionary)
     const registrationResponse = await axios.post("http://192.168.1.88:8080/register-mariadb",stateDictionary);
     console.log("response from register-mariadb in registerInMariadb method in user service is: ",registrationResponse.data);
-    return registrationResponse.data
+
+    if(registrationResponse.data.data !== null) {
+
+      if(this.updateSession(registrationResponse.data.data)) {
+
+        return {data: true, error: null};
+  
+      } else {
+  
+        return {data: null, error: registrationResponse.data};
+  
+      }
+    } else {
+
+      return {data: null, error: registrationResponse.data.error};
+
+    }
+
    }
 
 
