@@ -1,7 +1,7 @@
 import React, {useReducer, useEffect} from "react";
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import styles from "../styles/styles";
-import { Button, Paragraph, Dialog, Portal, Provider, Modal } from "react-native-paper";
+import { Button } from "react-native-paper";
 import GetInput from "../Components/GetInput";
 import GetModal from "./Modal";
 import { userService } from "../service/UserService";
@@ -62,7 +62,6 @@ export default function Register(props){
     })
     const containerStyle = {backgroundColor: 'white', padding: 20};
     const [errorExplanation, setErrorExplanation] = React.useState("");
-    // userService.deleteSession()
 
     function getStateValues(){
         console.log("value of states is: ",stateDictionary)
@@ -75,13 +74,10 @@ export default function Register(props){
         console.log("registrationResponse in register method in register component: ",registrationResponse)
 
         if (registrationResponse.data === null) {
+
             dispatch({ name : "showErrorMessageOnModal" , data : { errorMessage : registrationResponse.error.errorMessage}})
             showModal();
-            // dispatch( { name: "showErrorsOnModal" , action: { data : registrationResponse.error.errorMessage } })
             console.log("came after setting modal state")
-            // modal = <GetModal visible = {visible} hideModal = {hideModal} showModal = {showModal} bodyText = {registrationResponse.error.errorMessage} />
-            
-            
 
         } else {
 
@@ -93,16 +89,7 @@ export default function Register(props){
 
     return (
         <View style={styles.form}>
-            {/* <Portal>
-                <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
-                <Text>Sample error on render in register</Text>
-                </Modal>
-            </Portal> */}
             <GetModal visible = {visible} hideModal={hideModal} errorMessage={stateDictionary.errorMessage} />
-            
-            <Button style={{marginTop: 30}} onPress={showModal}>
-                        Show
-            </Button>
             <GetInput style={styles.inputStyle} label="First Name" secureTextEntry={false} value={stateDictionary.firstName} setText = {dispatch} textToChange="firstName" action="setFirstName"/>
             <GetInput style={styles.inputStyle} label="Last Name" secureTextEntry={false} value={stateDictionary.lastName} setText = {dispatch} textToChange="lastName" action="setLastName"/>
             <GetInput style={styles.inputStyle} label="Email" secureTextEntry={false} value={stateDictionary.email} setText = {dispatch} textToChange="email" action="setEmail"/>

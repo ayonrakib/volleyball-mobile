@@ -47,53 +47,36 @@ function reducer(stateDictionary, action){
 // console.log("userService object is: ",userService)
 const Login = ({navigation}) => {
   console.log("Login component loaded!")
-  useEffect(async ()=>{
+  const [stateDictionary, dispatch] = useReducer(reducer, {email: "", password: "", visible: false, errorMessage: "initial error message", showErrorMessage: false, reloadComponent: false});
+  useEffect(()=>{
     console.log("came inside useeffect of login method!")
-    const isUserLoggedIn = await userService.isLoggedIn();
-    console.log("is user logged in response from userservice in useeffect: ",isUserLoggedIn);
-
-    if (isUserLoggedIn !== undefined) {
+    const isUserLoggedIn = async() => {
+      const isUserLoggedIn = await userService.isLoggedIn();
+      console.log("is user logged in response from userservice in useeffect: ",isUserLoggedIn.data);
+  
+      if (isUserLoggedIn !== undefined) {
+        
+        if (isUserLoggedIn.data) {
       
-      if (isUserLoggedIn.data) {
+          console.log("user authenticated in useeffect of login!")
+          navigation.navigate("HomeScreen")
     
-        console.log("user authenticated in useeffect of login!")
-        navigation.navigate("HomeScreen")
-  
-      } else {
-  
-        userService.deleteSession();
-        dispatch( {name: "clearCredentials",data:""})
-  
+        } else {
+    
+          userService.deleteSession();
+          dispatch( {name: "clearCredentials",data:""})
+    
+        }
       }
     }
-  }, [])
+    isUserLoggedIn();
+  }, [stateDictionary.reloadComponent])
   const [visible, setVisible] = React.useState(false);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
-  const [stateDictionary, dispatch] = useReducer(reducer, {email: "", password: "", visible: false, errorMessage: "initial error message", showErrorMessage: false, reloadComponent: false});
-
   
-  function seeEmailValue(){
-    console.log("email value is: ",stateDictionary.email)
-  }
-
-
-  function seePasswordValue(){
-    console.log("password value is: ",stateDictionary.password)
-  }
-
-
-  // function showModal(){
-  //   dispatch({name: "showModal", data : { visible : true }});
-  // }
-
-
-  // function hideModal(){
-  //   dispatch({name: "hideModal", data: { visible : false }});
-  // }
-
 
   function setErrorMessage(errorMessage){
     dispatch({name: "setErrorMessage", data: { errorMessage : errorMessage }});
