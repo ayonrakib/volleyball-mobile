@@ -177,7 +177,7 @@ export class UserService{
         }
 
       } else {
-        if(this.updateSession(response.data.data)) {
+        if(this.updateSession(response.data)) {
 
           return {data: true, error: null};
 
@@ -235,7 +235,6 @@ export class UserService{
     //    3. else:
     //      3.1. return false
     async getSession(){
-      var authenticationObject:any;
       try {
         const sampleStoredDataInCookie = await AsyncStorageLib.getItem("authentication");
         console.log("sample Stored Data In Cookie:", sampleStoredDataInCookie);

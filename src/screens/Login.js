@@ -1,12 +1,9 @@
 import React, {useReducer, useEffect} from 'react';
-import axios from 'axios';
-import { View, Text, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { Button, TextInput, HelperText } from 'react-native-paper';
 import GetInput from '../Components/GetInput';
 import styles from '../styles/styles';
 import GetModal from '../screens/Modal';
-import Homepage from './Homepage';
-import HomeScreen from './HomeScreen';
 import {userService}  from '../service/UserService';
 var _ = require('lodash');
 
@@ -34,10 +31,12 @@ function reducer(stateDictionary, action){
       return { ...stateDictionary, showErrorMessage: false};
     case "reloadComponent":
       console.log("came into reloadComponent of dispatch!")
-      return { ...stateDictionary, reloadComponent: true};
+      return { ...stateDictionary, reloadComponent: action.data.reloadComponent};
     case "clearCredentials":
       console.log("came inside clear credentials of dispatch in Login!");
       return { ...stateDictionary, email : "", password : "" }
+    case "showErrorMessageOnModal":
+      return { ...stateDictionary, errorMessage : action.data.errorMessage }
     default:
       return stateDictionary;
 
@@ -51,11 +50,11 @@ const Login = ({navigation}) => {
   useEffect(async ()=>{
     console.log("came inside useeffect of login method!")
     const isUserLoggedIn = await userService.isLoggedIn();
-    console.log("is user logged in response from userservice in useeffect: ",isUserLoggedIn.data);
+    console.log("is user logged in response from userservice in useeffect: ",isUserLoggedIn);
 
     if (isUserLoggedIn !== undefined) {
       
-      if (isUserLoggedIn.data.data) {
+      if (isUserLoggedIn.data) {
     
         console.log("user authenticated in useeffect of login!")
         navigation.navigate("HomeScreen")
@@ -68,13 +67,16 @@ const Login = ({navigation}) => {
       }
     }
   }, [])
+  const [visible, setVisible] = React.useState(false);
 
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
 
-  const [stateDictionary, dispatch] = useReducer(reducer, {email: "", password: "", visible: false, errorMessage: "", showErrorMessage: false, reloadComponent: false});
+  const [stateDictionary, dispatch] = useReducer(reducer, {email: "", password: "", visible: false, errorMessage: "initial error message", showErrorMessage: false, reloadComponent: false});
 
   
   function seeEmailValue(){
-    console.log("email value is: ",stateDictionary)
+    console.log("email value is: ",stateDictionary.email)
   }
 
 
@@ -83,14 +85,14 @@ const Login = ({navigation}) => {
   }
 
 
-  function showModal(){
-    dispatch({name: "showModal", data : { visible : true }});
-  }
+  // function showModal(){
+  //   dispatch({name: "showModal", data : { visible : true }});
+  // }
 
 
-  function hideModal(){
-    dispatch({name: "hideModal", data: { visible : false }});
-  }
+  // function hideModal(){
+  //   dispatch({name: "hideModal", data: { visible : false }});
+  // }
 
 
   function setErrorMessage(errorMessage){
@@ -116,7 +118,6 @@ const Login = ({navigation}) => {
   //      3.2. call dispatch to reload login component
   async function performLogin(){
     let isUserLoggedIn = await userService.login(stateDictionary.email, stateDictionary.password);
-    console.log("return from userservce.login: ",isUserLoggedIn)
 
     console.log("user service login method response in login component is: ", isUserLoggedIn)
 
@@ -131,6 +132,8 @@ const Login = ({navigation}) => {
       console.log("isUserLoggedIn.error.error in performLogin method: ",isUserLoggedIn.error.error)
       console.log("isUserLoggedIn.error.error.errorMessage in performLogin method: ",isUserLoggedIn.error.error.message)
       setErrorMessage(isUserLoggedIn.error.error.message)
+      dispatch({ name : "showErrorMessageOnModal" , data: { errorMessage: isUserLoggedIn.error.error.message } })
+      showModal();
 
     }
   }
@@ -138,20 +141,13 @@ const Login = ({navigation}) => {
 
   return(
         <View style={styles.form}>
-          <HelperText type="error" visible={stateDictionary.showErrorMessage} style={{display: "flex", alignSelf: "center"}}>
-            {stateDictionary.errorMessage}
-          </HelperText>
+          <GetModal visible={visible} hideModal={hideModal} errorMessage={stateDictionary.errorMessage}/>
           <GetInput label="Email" secureTextEntry={false} value={stateDictionary.email} setText={dispatch} textToChange="email" action="setEmail"/>
           <GetInput label="Password" secureTextEntry={true} value={stateDictionary.password} setText={dispatch} textToChange="password" action="setPassword"/>
           <View style={styles.buttonRow}>
             <Button style={styles.buttonStyle} mode='contained' onPress={performLogin}>Login</Button>
             <Button style={styles.buttonStyle} mode='contained' onPress={() => navigation.navigate('Register')}>Register</Button>
           </View>
-          {/* <View style={styles.buttonRow}>
-            <GetModal/>
-          </View> */}
-          {/* <Button onPress={showModal}>Show Modal!</Button>
-          <Button onPress={hideModal}>Hide Modal!</Button> */}
         </View>
     ) 
 };
