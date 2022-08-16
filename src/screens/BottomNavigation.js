@@ -31,6 +31,7 @@ const MyComponent = () => {
       navigationState={{ index, routes }}
       onIndexChange={setIndex}
       renderScene={renderScene}
+      style={{alignSelf:"flex-end"}}
     />
   );
 };

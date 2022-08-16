@@ -1,5 +1,5 @@
 import React, {useReducer} from 'react';
-import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, View, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
 import { Button } from 'react-native-paper';
 import BottomNavigation from '../Components/BottomNavigation';
 import BottomNavigationIcon from '../Components/BottomNavigationIcon';
@@ -178,25 +178,73 @@ const HomeScreen = (props:any) => {
 
 
   return (
-    <View style={{flex: 1, backgroundColor: "white"}}>
-        <Button style={{width: "30%", alignSelf: "flex-end", backgroundColor: "green"}} mode="contained" onPress={logout} >
-          Logout!
-        </Button>
-      <View style={{ flexDirection: "row", flex:10, justifyContent: "center", alignItems: "center"}}>
-        <View>
-          {stateDictionary.componentToLoad}
-        </View>
-      </View>
-      <View style={{flex: 1, justifyContent: "flex-end"}}>
-        <View>
+    <View style={{flex:1}}>
 
-          <BottomNavigation 
+      <Button style={{ width: "30%", alignSelf: "flex-end", backgroundColor: "green", marginTop:30}} mode="contained" onPress={logout} >
+        Logout!
+      </Button>
+
+    <ScrollView style={{backgroundColor: "gray"}}>
+
+
+      <View style={{flex:1}}>
+          <View style={{flexDirection: "row", justifyContent: "center"}}>
+            {stateDictionary.componentToLoad}
+          </View>
+
+        <View style={{ flexDirection: "row", justifyContent: "center"}}>
+            {stateDictionary.componentToLoad}
+        </View>
+        <View style={{ flexDirection: "row", justifyContent: "center"}}>
+
+            {stateDictionary.componentToLoad}
+
+        </View>
+        <View style={{ flexDirection: "row", justifyContent: "center"}}>
+
+            {stateDictionary.componentToLoad}
+
+        </View>
+        <View style={{ flexDirection: "row", justifyContent: "center"}}>
+
+            {stateDictionary.componentToLoad}
+
+        </View>
+        <View style={{ flexDirection: "row", justifyContent: "center"}}>
+        
+            {stateDictionary.componentToLoad}
+         
+        </View>
+        <View style={{ flexDirection: "row", justifyContent: "center"}}>
+        
+            {stateDictionary.componentToLoad}
+     
+        </View>
+        <View style={{ flexDirection: "row", justifyContent: "center"}}>
+            
+            {stateDictionary.componentToLoad}
+        
+        </View>
+        <View style={{ flexDirection: "row", justifyContent: "center"}}>
+            
+            {stateDictionary.componentToLoad}
+        
+        </View>
+
+        
+        
+    </View>
+
+
+
+    </ScrollView>
+    <View style={{ justifyContent: "flex-end"}}>
+          <BottomNavigation
                 activateBottomNavigationPressableIcon={activateBottomNavigationPressableIcon}  
                 activeBottomNavigationPressableIconNumber={stateDictionary.activeBottomNavigationPressableIconNumber}
                 setComponentIndex = {setComponentIndex}
                 componentIndex = {stateDictionary.componentIndex}   
-          />
-        </View>   
+          />  
       </View>
     </View>
   );

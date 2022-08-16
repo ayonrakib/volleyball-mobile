@@ -52,6 +52,16 @@ const styles = StyleSheet.create({
     bottomNamvigationPressableBlock:{
         width: 50,
         alignItems: "center"
+    },
+    pollBackGround:{
+        backgroundColor: "yellow",
+        height: 50,
+        width: 100,
+        borderRadius: 20,
+        color: "white",
+        justifyContent: "center", 
+        alignItems: "center", 
+        margin: 10
     }
   });
 

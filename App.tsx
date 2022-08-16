@@ -12,6 +12,7 @@ import MyComponent from "./src/screens/BottomNavigation";
 import BottomNavigation from "./src/Components/BottomNavigation";
 import HomeScreen from "./src/screens/HomeScreen";
 import GetModal from "./src/screens/Modal";
+import { ScrollView } from "react-native-gesture-handler";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,13 +21,16 @@ export default function App(){
     // <HomeScreen />
       <PaperProvider>
         <NavigationContainer>
-          <Stack.Navigator>
+          <Stack.Navigator screenOptions={{headerShown:false}}>
             {/* <Stack.Screen options={{headerShown: false}} name="Modal" component={GetModal} /> */}
             
             <Stack.Screen options={{headerShown: false}} name="Login" component={Login} />
             <Stack.Screen options={{headerTitle: ""}}  name="Register" component={Register} />
             {/* <Stack.Screen options={{headerTitle: "", headerBackVisible: false}}  name="Homepage" component={Homepage} /> */}
+         
             <Stack.Screen options={{headerTitle: "", headerBackVisible: false}}  name="HomeScreen" component={HomeScreen} />
+       
+            
           </Stack.Navigator>
         </NavigationContainer>
       </PaperProvider>
