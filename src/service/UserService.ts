@@ -173,7 +173,14 @@ export class UserService{
         if (this.deleteSession()) {
           console.log("response error message of Error in unauthentication in uservice is: ", response.error.message)
           return { data : false, error: response };
-
+          // data: false,
+          // error: {
+                      // data: false,
+                      // error: {
+                        //      errorCode: 200,
+                        //      errorMessage: "login error" 
+                      // }
+          // }
         }
 
       } else {

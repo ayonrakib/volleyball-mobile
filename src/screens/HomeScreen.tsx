@@ -4,7 +4,6 @@ import { Button } from 'react-native-paper';
 import BottomNavigation from '../Components/BottomNavigation';
 import BottomNavigationIcon from '../Components/BottomNavigationIcon';
 import AsyncStorageLib from "@react-native-async-storage/async-storage";
-import axios from 'axios';
 import { useEffect } from 'react';
 import style from '../styles/styles';
 import HomePage from './HomePage';

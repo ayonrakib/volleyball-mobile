@@ -115,7 +115,7 @@ const Login = ({navigation}) => {
       console.log("isUserLoggedIn.error.error in performLogin method: ",isUserLoggedIn.error.error)
       console.log("isUserLoggedIn.error.error.errorMessage in performLogin method: ",isUserLoggedIn.error.error.message)
       setErrorMessage(isUserLoggedIn.error.error.message)
-      dispatch({ name : "showErrorMessageOnModal" , data: { errorMessage: isUserLoggedIn.error.error.message } })
+      // dispatch({ name : "showErrorMessageOnModal" , data: { errorMessage: isUserLoggedIn.error.error.message } })
       showModal();
 
     }

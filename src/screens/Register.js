@@ -70,20 +70,29 @@ export default function Register(props){
 
     async function register(){
         console.log("came in register method!")
-        const registrationResponse = await userService.registerInMariadb(stateDictionary);
-        console.log("registrationResponse in register method in register component: ",registrationResponse)
-
-        if (registrationResponse.data === null) {
-
-            dispatch({ name : "showErrorMessageOnModal" , data : { errorMessage : registrationResponse.error.errorMessage}})
+        if((stateDictionary.email === "") || (stateDictionary.password === "") || (stateDictionary.firstName === "") || (stateDictionary.lastName === "")){
+            
+            dispatch({ name : "showErrorMessageOnModal" , data : { errorMessage : "Please insert valid inputs!"}})
             showModal();
-            console.log("came after setting modal state")
+            console.log("came after setting modal state and showing error in modal")
 
         } else {
-
-            dispatch( {name : "reloadComponent" , data : { reloadComponent : true }} )
-
+            const registrationResponse = await userService.registerInMariadb(stateDictionary);
+            console.log("registrationResponse in register method in register component: ",registrationResponse)
+    
+            if (registrationResponse.data === null) {
+    
+                dispatch({ name : "showErrorMessageOnModal" , data : { errorMessage : registrationResponse.error.errorMessage}})
+                showModal();
+                console.log("came after setting modal state and showing error in modal")
+    
+            } else {
+    
+                dispatch( {name : "reloadComponent" , data : { reloadComponent : true }} )
+    
+            }
         }
+
         
     }
 
