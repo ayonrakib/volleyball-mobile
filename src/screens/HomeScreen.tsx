@@ -186,45 +186,45 @@ const HomeScreen = (props:any) => {
     <ScrollView style={{backgroundColor: "gray"}}>
 
 
-      <View style={{flex:1}}>
-          <View style={{flexDirection: "row", justifyContent: "center"}}>
+      <View style={{}}>
+          <View style={{marginVertical: 10, width:"80%", alignSelf: "center", justifyContent: "center"}}>
             {stateDictionary.componentToLoad}
           </View>
 
-        <View style={{ flexDirection: "row", justifyContent: "center"}}>
+        <View style={{  justifyContent: "center"}}>
             {stateDictionary.componentToLoad}
         </View>
-        <View style={{ flexDirection: "row", justifyContent: "center"}}>
-
-            {stateDictionary.componentToLoad}
-
-        </View>
-        <View style={{ flexDirection: "row", justifyContent: "center"}}>
+        <View style={{  justifyContent: "center"}}>
 
             {stateDictionary.componentToLoad}
 
         </View>
-        <View style={{ flexDirection: "row", justifyContent: "center"}}>
+        <View style={{  justifyContent: "center"}}>
 
             {stateDictionary.componentToLoad}
 
         </View>
-        <View style={{ flexDirection: "row", justifyContent: "center"}}>
+        <View style={{  justifyContent: "center"}}>
+
+            {stateDictionary.componentToLoad}
+
+        </View>
+        <View style={{  justifyContent: "center"}}>
         
             {stateDictionary.componentToLoad}
          
         </View>
-        <View style={{ flexDirection: "row", justifyContent: "center"}}>
+        <View style={{  justifyContent: "center"}}>
         
             {stateDictionary.componentToLoad}
      
         </View>
-        <View style={{ flexDirection: "row", justifyContent: "center"}}>
+        <View style={{  justifyContent: "center"}}>
             
             {stateDictionary.componentToLoad}
         
         </View>
-        <View style={{ flexDirection: "row", justifyContent: "center"}}>
+        <View style={{  justifyContent: "center"}}>
             
             {stateDictionary.componentToLoad}
         
