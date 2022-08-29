@@ -19,5 +19,6 @@ export default function Poll(){
                         <Button>Ok</Button>
                     </Card.Actions>
             </Card>
+
     )
 }

@@ -298,6 +298,22 @@ export class UserService{
 
     // delete user method
 
+
+    // get weather
+    // input: set weather situation, set temp, set weather icon 
+    // return: nothing, just assign weather info in states
+    // method:
+    //    1. call weather api
+    //    2. resolve response
+    //    3. assign weather situation in set weather situation
+    //    4. assign temp to set temp
+    //    5. assign weather icon to set weather icon
+    async getWeather(setWeatherText, setTemparature, setWeatherIcon):Promise<void>{
+      console.log("came in get weather user service");
+      const rawWeatherDetails = await axios.get("https://api.openweathermap.org/data/2.5/weather?lat=30.2672&lon=97.7431&appid=1b6a9c43f4c7125af9f430ff79f20599");
+      console.log("weather text is: ",rawWeatherDetails.data.weather[2]);
+      console.log("temparature is: ",rawWeatherDetails.data.main.feels_like);
+    }
     
 }
 

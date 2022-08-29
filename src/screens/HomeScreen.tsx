@@ -185,56 +185,9 @@ const HomeScreen = (props:any) => {
 
     <ScrollView style={{backgroundColor: "gray"}}>
 
-
-      <View style={{}}>
-          <View style={{marginVertical: 10, width:"80%", alignSelf: "center", justifyContent: "center"}}>
-            {stateDictionary.componentToLoad}
-          </View>
-
-        <View style={{  justifyContent: "center"}}>
-            {stateDictionary.componentToLoad}
+        <View style={{marginVertical: 10, width:"80%", alignSelf: "center", justifyContent: "center"}}>
+          {stateDictionary.componentToLoad}
         </View>
-        <View style={{  justifyContent: "center"}}>
-
-            {stateDictionary.componentToLoad}
-
-        </View>
-        <View style={{  justifyContent: "center"}}>
-
-            {stateDictionary.componentToLoad}
-
-        </View>
-        <View style={{  justifyContent: "center"}}>
-
-            {stateDictionary.componentToLoad}
-
-        </View>
-        <View style={{  justifyContent: "center"}}>
-        
-            {stateDictionary.componentToLoad}
-         
-        </View>
-        <View style={{  justifyContent: "center"}}>
-        
-            {stateDictionary.componentToLoad}
-     
-        </View>
-        <View style={{  justifyContent: "center"}}>
-            
-            {stateDictionary.componentToLoad}
-        
-        </View>
-        <View style={{  justifyContent: "center"}}>
-            
-            {stateDictionary.componentToLoad}
-        
-        </View>
-
-        
-        
-    </View>
-
-
 
     </ScrollView>
     <View style={{ justifyContent: "flex-end"}}>
