@@ -1,0 +1,14 @@
+{
+    "root": true,
+    "no-unused-vars": "off",
+    "no-empty-function": "off",
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended"
+    ]
+  }

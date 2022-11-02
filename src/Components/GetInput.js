@@ -1,4 +1,5 @@
 import { TextInput } from "react-native-paper";
+import * as React from 'react';
 import styles from "../styles/styles";
 
 export default function GetInput(props){

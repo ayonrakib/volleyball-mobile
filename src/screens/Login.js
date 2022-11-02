@@ -57,7 +57,7 @@ const Login = ({navigation}) => {
       if (isUserLoggedIn !== undefined) {
         
         if (isUserLoggedIn.data) {
-      
+       
           console.log("user authenticated in useeffect of login!")
           navigation.navigate("HomeScreen")
     

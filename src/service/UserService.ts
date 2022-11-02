@@ -82,7 +82,6 @@ export class UserService{
     }
 
 
-
     // delete session async method
     // input: nothing
     // return: true if deleted, fals eif nothing

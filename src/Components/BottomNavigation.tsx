@@ -28,7 +28,12 @@ export default function BottomNavigation(props:any){
                                         iconName = "bar-chart" 
                                         iconColor = "white" 
                                         style={style.bottomNavigationIconStyle}
-                                        />
+                                    />,
+                                    <BottomNavigationIcon 
+                                        iconName = "group" 
+                                        iconColor = "white" 
+                                        style={style.bottomNavigationIconStyle}
+                                    />
                                 ];
     
     
@@ -52,11 +57,16 @@ export default function BottomNavigation(props:any){
                                                 iconName = "bar-chart" 
                                                 iconColor = "white" 
                                                 style={style.bottomNavigationIconStyleActive}
-                                            />
+                                            />,
+                                            <BottomNavigationIcon 
+                                            iconName = "group" 
+                                            iconColor = "white" 
+                                            style={style.bottomNavigationIconStyleActive}
+                                        />
                                         ];
     bottomNavigationIcons[props.componentIndex] = activeBottomNavigationIcons[props.componentIndex]
 
-    const buttonNames = ["Home" , "News", "Profile", "Poll"];
+    const buttonNames = ["Home" , "News", "Profile", "Poll", "Tournament"];
 
 
     // get pressable icon
@@ -71,7 +81,7 @@ export default function BottomNavigation(props:any){
                 onPress={() => props.setComponentIndex(componentIndex)}
             >
                 {bottomNavigationIcons[componentIndex]}
-                <BottomNavigationIconText 
+                <BottomNavigationIconText
                     iconText = {buttonNames[componentIndex]}
                 />
             </Pressable>
@@ -91,6 +101,7 @@ export default function BottomNavigation(props:any){
                 {getPressableIcon(1)}
                 {getPressableIcon(2)}
                 {getPressableIcon(3)}
+                {getPressableIcon(4)}
 
         </View>
     )
