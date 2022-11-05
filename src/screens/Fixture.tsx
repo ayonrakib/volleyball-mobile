@@ -4,8 +4,8 @@ import { View, Text } from 'react-native';
 export default function Fixture() {
     return (
         <View>
-            <Text>
-                Fixture
+            <Text style={{ "fontWeight": "bold" }}>
+                League Day 1: 10/29/2022
             </Text>
         </View>
     )

@@ -62,6 +62,17 @@ const styles = StyleSheet.create({
         justifyContent: "center", 
         alignItems: "center", 
         margin: 10
+    },
+    galleryImageContainerBlock:{
+        width: 150, 
+        height: 150, 
+        borderRadius: 30
+    },
+    galleryImage:{
+        maxHeight: "100%", 
+        maxWidth: "100%",
+        resizeMode: "contain",
+        borderRadius: "30"
     }
   });
 

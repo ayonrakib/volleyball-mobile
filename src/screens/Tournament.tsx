@@ -1,17 +1,14 @@
-import React, { useReducer } from 'react';
-import { Text, StyleSheet, View, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
-import { Button } from 'react-native-paper';
+import React, { useEffect, useReducer } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import BottomNavigation from '../Components/BottomNavigation';
 import BottomNavigationIcon from '../Components/BottomNavigationIcon';
-import AsyncStorageLib from "@react-native-async-storage/async-storage";
-import { useEffect } from 'react';
-import style from '../styles/styles';
-import HomePage from './HomePage';
-import NewsPage from './NewsPage';
-import ProfilePage from './ProfilePage';
-import PollPage from './PollPage';
-import TournamentPage from './TournamentPage';
+import Logout from '../Components/Logout';
 import { userService } from "../service/UserService";
+import style from '../styles/styles';
+import HomePage from './Gallery';
+import NewsPage from './NewsPage';
+import PollPage from './PollPage';
+import ProfilePage from './ProfilePage';
 var _ = require('lodash')
 
 function reducer(stateDictionary: any, action: any) {
@@ -31,9 +28,9 @@ function reducer(stateDictionary: any, action: any) {
 }
 
 
-const screenComponents = [<HomePage />, <NewsPage />, <ProfilePage />, <PollPage />, <TournamentPage />];
+const screenComponents = [<HomePage />, <NewsPage />, <ProfilePage />, <PollPage />];
 
-const HomeScreen = (props: any) => {
+const Tournament = (props: any) => {
   useEffect(() => {
     console.log("came inside useeffect of HomeScreen method!")
     const isUserLoggedInAsyncMethod = async () => {
@@ -93,23 +90,21 @@ const HomeScreen = (props: any) => {
   // method:
   //    1. call user service delete session method
   //    2. call dispatch and set reload component to true
-  async function logout() {
-    console.log("came into logout!");
-    const logoutResponse = await userService.deleteSession();
-    console.log("session deleted successfully in logout!")
-    console.log("logoutResponse is: ", logoutResponse)
-    if (logoutResponse) {
-      dispatch({ name: "reloadComponent", data: { reloadComponent: true } });
-    }
-  }
+  // async function logout() {
+  //   console.log("came into logout!");
+  //   const logoutResponse = await userService.deleteSession();
+  //   console.log("session deleted successfully in logout!")
+  //   console.log("logoutResponse is: ", logoutResponse)
+  //   if (logoutResponse) {
+  //     dispatch({ name: "reloadComponent", data: { reloadComponent: true } });
+  //   }
+  // }
 
 
   return (
     <View style={{ flex: 1 }}>
 
-      <Button style={{ width: "30%", alignSelf: "flex-end", backgroundColor: "green", marginTop: 30 }} mode="contained" onPress={logout} >
-        Logout!
-      </Button>
+      <Logout dispatch={dispatch} />
 
       <ScrollView style={{ backgroundColor: "gray" }}>
 
@@ -136,4 +131,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+export default Tournament;
