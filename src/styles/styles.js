@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
         maxHeight: "100%", 
         maxWidth: "100%",
         resizeMode: "contain",
-        borderRadius: "30"
+        borderRadius: 30
     }
   });
 

@@ -5,7 +5,7 @@ import BottomNavigationIcon from '../Components/BottomNavigationIcon';
 import Logout from '../Components/Logout';
 import { userService } from "../service/UserService";
 import style from '../styles/styles';
-import HomePage from './Gallery';
+import Gallery from './Gallery';
 import NewsPage from './NewsPage';
 import PollPage from './PollPage';
 import ProfilePage from './ProfilePage';
@@ -28,7 +28,7 @@ function reducer(stateDictionary: any, action: any) {
 }
 
 
-const screenComponents = [<HomePage />, <NewsPage />, <ProfilePage />, <PollPage />];
+const screenComponents = [<Gallery />, <NewsPage />, <ProfilePage />, <PollPage />];
 
 const Tournament = (props: any) => {
   useEffect(() => {
@@ -48,6 +48,7 @@ const Tournament = (props: any) => {
         }
       }
     }
+    isUserLoggedInAsyncMethod();
   }
   )
 
@@ -57,7 +58,7 @@ const Tournament = (props: any) => {
   //    redirect user to login screen
   const [stateDictionary, dispatch] = useReducer(reducer,
     {
-      componentToLoad: <HomePage />,
+      componentToLoad: <Gallery />,
       activeBottomNavigationPressableIconComponent: <BottomNavigationIcon
         iconName="home"
         iconColor="white"
@@ -102,7 +103,7 @@ const Tournament = (props: any) => {
 
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ "flex": 1 }}>
 
       <Logout dispatch={dispatch} />
 
