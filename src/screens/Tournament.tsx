@@ -32,15 +32,15 @@ const screenComponents = [<Gallery />, <NewsPage />, <ProfilePage />, <PollPage 
 
 const Tournament = (props: any) => {
   useEffect(() => {
-    console.log("came inside useeffect of HomeScreen method!")
+    console.log("came inside useeffect of Tournament method!")
     const isUserLoggedInAsyncMethod = async () => {
       const isUserLoggedIn = await userService.isLoggedIn();
-      console.log("is user logged in response from userservice in useeffect: ", isUserLoggedIn.data);
+      console.log("is user logged in response from userservice in useeffect of Tournament: ", isUserLoggedIn.data);
 
       if (isUserLoggedIn !== undefined) {
         if (isUserLoggedIn.data.data) {
-          console.log("user authenticated in useeffect of login!")
-          props.navigation.navigate("HomeScreen")
+          console.log("user authenticated in useeffect of Tournament!")
+          props.navigation.navigate("HomePage")
         } else {
           userService.deleteSession();
           props.navigation.navigate("Login")
@@ -109,7 +109,7 @@ const Tournament = (props: any) => {
 
       <ScrollView style={{ backgroundColor: "gray" }}>
 
-        <View style={{ marginVertical: 10, width: "80%", alignSelf: "center", justifyContent: "center" }}>
+        <View style={{ marginVertical: 10, width: "100%", alignSelf: "center", justifyContent: "center" }}>
           {stateDictionary.componentToLoad}
         </View>
 

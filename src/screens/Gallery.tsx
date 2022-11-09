@@ -8,7 +8,7 @@ export default function Gallery() {
     let imageRow = [];
     for (let index = 0; index < 2; index++) {
         imageRow.push(
-            <View style={{ "width": 150, "height": 150, "borderRadius": 30 }} key={Math.random()}>
+            <View style={{ "width": 180, "height": 180 }} key={Math.random()}>
                 <Image
                     resizeMode="contain"
                     source={require("../../assets/images/tournament-2022-pictures/1.jpg")}
@@ -18,7 +18,7 @@ export default function Gallery() {
         )
     }
     return (
-        <ScrollView style={{ "flex": 1 }}>
+        <ScrollView style={{}}>
             <View style={{ "justifyContent": "space-around", "flexDirection": "row" }}>
                 {imageRow}
             </View>
@@ -35,6 +35,5 @@ export default function Gallery() {
                 {imageRow}
             </View>
         </ScrollView>
-
     )
 }

@@ -71,7 +71,6 @@ const styles = StyleSheet.create({
     galleryImage:{
         maxHeight: "100%", 
         maxWidth: "100%",
-        resizeMode: "contain",
         borderRadius: 30
     }
   });

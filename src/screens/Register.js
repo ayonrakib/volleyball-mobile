@@ -49,7 +49,7 @@ export default function Register(props){
         if (isUserLoggedIn.data.data) {
     
         console.log("user authenticated in useeffect of login!")
-        props.navigation.navigate("HomeScreen")
+        props.navigation.navigate("Tournament")
     
         } else {
     

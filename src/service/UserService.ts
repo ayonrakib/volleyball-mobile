@@ -149,28 +149,28 @@ export class UserService{
     //        4.3.1. return true
     //      4.4. return false
     async login(email:string, password:string):Promise<{data: boolean, error: {} | null}>{
-      console.log("came in login method!")
+      console.log("Userservice: came in login method!");
       var stateDictionary = {
         email: email,
         password: password
       }
 
       let loginResponse = await axios.post("http://192.168.1.88:8080/login-mariadb", stateDictionary);
-      console.log("response from login-mariadb in await axios: ",loginResponse.data)
+      console.log("Userservice: response from login-mariadb in await axios : ",loginResponse.data)
 
       const error = ApiError.fromApiError(loginResponse.data.error); 
-      console.log("error in login method in user service: ",error)
+      console.log("Userservice: error in login method in user service: ",error)
       let response = new Response(loginResponse.data.data, error);
 
-      console.log("response in login is: ",response)
-      console.log("response data in uservice is: ",response.data)
-      console.log("response error in uservice is: ",response.error)
+      console.log("Userservice: response in login is: ",response)
+      console.log("Userservice: response data in uservice is: ",response.data)
+      console.log("Userservice: response error in uservice is: ",response.error)
       // console.log("response error message of Error in uservice is: ", response.error.message)
 
       if (response.data === null) {
 
         if (this.deleteSession()) {
-          console.log("response error message of Error in unauthentication in uservice is: ", response.error.message)
+          console.log("Userservice: response error message of Error in unauthentication in uservice is: ", response.error.message)
           return { data : false, error: response };
           // data: false,
           // error: {
@@ -207,9 +207,9 @@ export class UserService{
     //      3.1. save the session in the react native async storage
     //      3.2. reload component
    async registerInMariadb(stateDictionary : any) {
-    console.log("state dict in registerInMariadb method in user service is: ",stateDictionary)
+    console.log("Userservice: state dict in registerInMariadb method in user service is: ",stateDictionary)
     const registrationResponse = await axios.post("http://192.168.1.88:8080/register-mariadb",stateDictionary);
-    console.log("response from register-mariadb in registerInMariadb method in user service is: ",registrationResponse.data);
+    console.log("Userservice: response from register-mariadb in registerInMariadb method in user service is: ",registrationResponse.data);
 
     if(registrationResponse.data.data !== null) {
 
@@ -243,12 +243,12 @@ export class UserService{
     async getSession(){
       try {
         const sampleStoredDataInCookie = await AsyncStorageLib.getItem("authentication");
-        console.log("sample Stored Data In Cookie:", sampleStoredDataInCookie);
+        console.log("Userservice: sample Stored Data In Cookie:", sampleStoredDataInCookie);
         const JSONParsedSession = JSON.parse(sampleStoredDataInCookie);
         return JSONParsedSession
       } catch(e) {
         // error reading value
-        console.log("there was an error reading sessions in getSession method!: ",e)
+        console.log("Userservice: there was an error reading sessions in getSession method!: ",e)
         return false;
       }
     }
@@ -267,13 +267,13 @@ export class UserService{
       console.log("today in string: ",todayInString)
       date.setDate(date.getDate()+7)
       let aWeekFromNowInString = date.toDateString();
-      console.log("a week from now: ",aWeekFromNowInString)
+      console.log("Userservice: a week from now: ",aWeekFromNowInString)
       
       let todayInObject = new Date(todayInString);
-      console.log("today in js object: ",todayInObject)
+      console.log("Userservice: today in js object: ",todayInObject)
       
       let aWeekFromNowInObject = new Date(aWeekFromNowInString);
-      console.log("a week from now in js object: ",aWeekFromNowInObject)
+      console.log("Userservice: a week from now in js object: ",aWeekFromNowInObject)
       try{
         await AsyncStorageLib.setItem("session", session);
         // AsyncStorageLib.setItem("authentication", session)
@@ -308,7 +308,7 @@ export class UserService{
     //    4. assign temp to set temp
     //    5. assign weather icon to set weather icon
     async getWeather(setWeatherText, setTemparature, setWeatherIcon):Promise<any>{
-      console.log("came in get weather user service");
+      console.log("Userservice: came in get weather user service");
       const rawWeatherDetails = await axios.get("https://api.openweathermap.org/data/2.5/weather?lat=30.2672&lon=97.7431&appid=1b6a9c43f4c7125af9f430ff79f20599&units=imperial");
       // console.log("weather text is: ",rawWeatherDetails.data.weather[0].description);
       // console.log("temparature is: ",rawWeatherDetails.data.main.feels_like);

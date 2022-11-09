@@ -5,6 +5,7 @@ import GetInput from '../Components/GetInput';
 import styles from '../styles/styles';
 import GetModal from '../screens/Modal';
 import {userService}  from '../service/UserService';
+import HomePage from './HomePage';
 var _ = require('lodash');
 
 function reducer(stateDictionary, action){
@@ -36,7 +37,10 @@ function reducer(stateDictionary, action){
       console.log("came inside clear credentials of dispatch in Login!");
       return { ...stateDictionary, email : "", password : "" }
     case "showErrorMessageOnModal":
-      return { ...stateDictionary, errorMessage : action.data.errorMessage }
+      return { ...stateDictionary, errorMessage : action.data.errorMessage };
+    case "isLoggedIn":
+      console.log("Login: came into isLoggedIn of dispatch!");
+      return { ...stateDictionary, isLoggedIn: action.data.loginResponse };
     default:
       return stateDictionary;
 
@@ -46,20 +50,21 @@ function reducer(stateDictionary, action){
 
 // console.log("userService object is: ",userService)
 const Login = ({navigation}) => {
-  console.log("Login component loaded!")
-  const [stateDictionary, dispatch] = useReducer(reducer, {email: "", password: "", visible: false, errorMessage: "initial error message", showErrorMessage: false, reloadComponent: false});
+  const [visible, setVisible] = React.useState(false);
+  const [stateDictionary, dispatch] = useReducer(reducer, {email: "", password: "", isLoggedIn: false, visible: false, errorMessage: "initial error message", showErrorMessage: false, reloadComponent: false});
+  console.log("Login: Login component loaded!");
   useEffect(()=>{
-    console.log("came inside useeffect of login method!")
+    console.log("Login: came inside useeffect of login method!")
     const isUserLoggedIn = async() => {
-      const isUserLoggedIn = await userService.isLoggedIn();
-      console.log("is user logged in response from userservice in useeffect: ",isUserLoggedIn.data);
+      const loginResponse = await userService.isLoggedIn();
+      console.log("Login: is user logged in response from userservice in useeffect: ",loginResponse.data);
   
-      if (isUserLoggedIn !== undefined) {
+      if (loginResponse !== undefined) {
         
-        if (isUserLoggedIn.data) {
+        if (loginResponse.data) {
        
-          console.log("user authenticated in useeffect of login!")
-          navigation.navigate("HomeScreen")
+          console.log("Login: user authenticated in useeffect of login!")
+          dispatch({ name: "isLoggedIn", data: { loginResponse: loginResponse.data } });
     
         } else {
     
@@ -70,9 +75,12 @@ const Login = ({navigation}) => {
       }
     }
     isUserLoggedIn();
-  }, [stateDictionary.reloadComponent])
-  const [visible, setVisible] = React.useState(false);
-
+  }, [stateDictionary.reloadComponent]);
+  
+  if(stateDictionary.isLoggedIn){
+    navigation.navigate("LoggedInDrawer");
+  }
+  
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
 
@@ -102,10 +110,10 @@ const Login = ({navigation}) => {
   async function performLogin(){
     let isUserLoggedIn = await userService.login(stateDictionary.email, stateDictionary.password);
 
-    console.log("user service login method response in login component is: ", isUserLoggedIn)
+    console.log("Login: user service login method response in login component is: ", isUserLoggedIn)
 
     if (isUserLoggedIn.data) {
-      console.log("isUserLoggedIn.data in performLogin method: ",isUserLoggedIn.data)
+      console.log("Login: isUserLoggedIn.data in performLogin method: ",isUserLoggedIn.data)
       hideErrorMessage();
       dispatch( {name : "reloadComponent" , data : { reloadComponent : true }} )
 

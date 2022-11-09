@@ -9,7 +9,7 @@ export default function Logout(props) {
     // method:
     //    1. call user service delete session method
     //    2. call dispatch and set reload component to true
-    async function logout() {
+    async function handleLogout() {
         console.log("came into logout!");
         const logoutResponse = await userService.deleteSession();
         console.log("session deleted successfully in logout!")
@@ -19,7 +19,7 @@ export default function Logout(props) {
         }
     }
     return (
-        <Button style={{ width: "30%", alignSelf: "flex-end", backgroundColor: "green" }} mode="contained" onPress={logout} >
+        <Button style={{ width: "30%", alignSelf: "flex-end", backgroundColor: "green" }} mode="contained" onPress={handleLogout} >
             Logout!
         </Button>
     )
