@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Modal, Portal, Text, Button, Provider } from 'react-native-paper';
-import { View } from 'react-native';
+import { Image, View } from 'react-native';
 
 const GetModal = (props) => {
   const containerStyle = {backgroundColor: 'white', padding: 10};
@@ -9,6 +9,10 @@ const GetModal = (props) => {
       <Portal>
         <Modal visible={props.visible} onDismiss={props.hideModal} contentContainerStyle={containerStyle}>
           <Text>{props.errorMessage}</Text>
+          <View style={{flex:1, justifyContent:"center", alignItems:"center"}}>
+            <Image style={{"width":400, "height":400}} resizeMode='contain' source={require("../../assets/images/tournament-2022-pictures/1.jpg")}/>
+          </View>
+          
         </Modal>
       </Portal>
   );

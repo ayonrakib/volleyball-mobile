@@ -11,11 +11,12 @@ export default function Logout(props) {
     //    2. call dispatch and set reload component to true
     async function handleLogout() {
         console.log("came into logout!");
+        console.log("props in logout component is: ", props);
         const logoutResponse = await userService.deleteSession();
         console.log("session deleted successfully in logout!")
         console.log("logoutResponse is: ", logoutResponse)
         if (logoutResponse) {
-            props.dispatch({ name: "reloadComponent", data: { reloadComponent: true } });
+            props.navigation.navigate("Login");
         }
     }
     return (

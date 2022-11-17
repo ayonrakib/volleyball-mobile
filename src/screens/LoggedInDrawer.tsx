@@ -25,7 +25,6 @@ function reducer(stateDictionary, action) {
 export default function LoggedInDrawer(props) {
     const [stateDictionary, dispatch] = useReducer(reducer, { reloadComponent: false, isLoggedIn: props.route.params.isLoggedIn });
     console.log("LoggedInDrawer: Came inside LoggedInDrawer Component!");
-    console.log("LoggedInDrawer: props: ", props);
     console.log("LoggedInDrawer: props.route.params.isLoggedIn: ", props.route.params.isLoggedIn);
     useEffect(() => {
         const checkIfUserIsLoggedIn = async () => {
@@ -44,7 +43,7 @@ export default function LoggedInDrawer(props) {
             <Drawer.Screen name="Profile" component={ProfilePage} />
             <Drawer.Screen name="Poll" component={PollPage} />
             <Drawer.Screen name="Tournament" component={Tournament} />
-            <Drawer.Screen name="Logout" initialParams={{ dispatch: dispatch }} component={Logout} />
+            <Drawer.Screen name="Logout" component={Logout} />
         </Drawer.Navigator>
     )
 }
