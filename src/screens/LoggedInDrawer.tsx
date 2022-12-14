@@ -44,6 +44,7 @@ export default function LoggedInDrawer(props) {
             <Drawer.Screen name="Poll" component={PollPage} />
             <Drawer.Screen name="Tournament" component={Tournament} />
             <Drawer.Screen name="Logout" component={Logout} />
+            {/* dont create another button, just call the method */}
         </Drawer.Navigator>
     )
 }

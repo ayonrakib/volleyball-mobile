@@ -9,11 +9,11 @@ import Tournament from './Tournament';
 export default function LoggedOutDrawer() {
     const Drawer = createDrawerNavigator();
     return (
-        <>
+        <Drawer.Navigator initialRouteName="HomePage">
             <Drawer.Screen name="Login" component={Login} />
             <Drawer.Screen name="Register" component={Register} />
             <Drawer.Screen name="Poll" component={PollPage} />
             <Drawer.Screen name="Tournament" component={Tournament} />
-        </>
+        </Drawer.Navigator>
     )
 }

@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Modal, Portal, Text, Button, Provider } from 'react-native-paper';
 import { Image, View } from 'react-native';
 
+// props e height width pathaye dibo. jodi height choto hoy, error message show korbo
+
 const GetModal = (props) => {
   const containerStyle = {backgroundColor: 'white', padding: 10};
 

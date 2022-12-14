@@ -60,8 +60,9 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
+            options={{ headerShown: false }}
             name="Login"
-            component={Login}
+            component={LoggedOutDrawer}
           />
           <Stack.Screen
             options={{ headerShown: false }}

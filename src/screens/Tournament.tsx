@@ -31,26 +31,26 @@ function reducer(stateDictionary: any, action: any) {
 const screenComponents = [<Gallery />, <NewsPage />, <ProfilePage />, <PollPage />];
 
 const Tournament = (props: any) => {
-  useEffect(() => {
-    console.log("came inside useeffect of Tournament method!")
-    const isUserLoggedInAsyncMethod = async () => {
-      const isUserLoggedIn = await userService.isLoggedIn();
-      console.log("is user logged in response from userservice in useeffect of Tournament: ", isUserLoggedIn.data);
+  // useEffect(() => {
+  //   console.log("came inside useeffect of Tournament method!")
+  //   const isUserLoggedInAsyncMethod = async () => {
+  //     const isUserLoggedIn = await userService.isLoggedIn();
+  //     console.log("is user logged in response from userservice in useeffect of Tournament: ", isUserLoggedIn.data);
 
-      if (isUserLoggedIn !== undefined) {
-        if (isUserLoggedIn.data.data) {
-          console.log("user authenticated in useeffect of Tournament!")
-          props.navigation.navigate("HomePage")
-        } else {
-          userService.deleteSession();
-          props.navigation.navigate("Login")
-          // setErrorMessage()
-        }
-      }
-    }
-    isUserLoggedInAsyncMethod();
-  }
-  )
+  //     if (isUserLoggedIn !== undefined) {
+  //       if (isUserLoggedIn.data.data) {
+  //         console.log("user authenticated in useeffect of Tournament!")
+  //         props.navigation.navigate("HomePage")
+  //       } else {
+  //         userService.deleteSession();
+  //         props.navigation.navigate("Login")
+  //         // setErrorMessage()
+  //       }
+  //     }
+  //   }
+  //   isUserLoggedInAsyncMethod();
+  // }
+  // )
 
   // if userService.isLoggedIn() == true:
   //    direct user to homescreen
@@ -104,17 +104,16 @@ const Tournament = (props: any) => {
 
   return (
     <View style={{ "flex": 1 }}>
-
-      <Logout dispatch={dispatch} />
-
       <ScrollView style={{ backgroundColor: "gray" }}>
-
-        <View style={{ marginVertical: 10, width: "100%", alignSelf: "center", justifyContent: "center" }}>
+        <View
+          style={{ marginVertical: 10, width: "100%", alignSelf: "center", justifyContent: "center" }}
+        >
           {stateDictionary.componentToLoad}
         </View>
-
       </ScrollView>
-      <View style={{ justifyContent: "flex-end" }}>
+      <View
+        style={{ justifyContent: "flex-end" }}
+      >
         <BottomNavigation
           activateBottomNavigationPressableIcon={activateBottomNavigationPressableIcon}
           activeBottomNavigationPressableIconNumber={stateDictionary.activeBottomNavigationPressableIconNumber}

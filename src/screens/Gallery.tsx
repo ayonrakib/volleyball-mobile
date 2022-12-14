@@ -29,24 +29,18 @@ export default function Gallery() {
             </TouchableOpacity>
         )
     }
+    const allImages = [];
+    for (let index = 0; index < 5; index++) {
+        allImages.push(
+            <View style={{ "justifyContent": "space-around", "flexDirection": "row" }}>
+                {imageRow}
+            </View>
+        )
+    }
     return (
         <ScrollView>
             <GetModal visible={visible} hideModal={hideModal} errorMessage={"Sample error message for modal"} imageLocation="../../assets/images/tournament-2022-pictures/1.jpg" />
-            <View style={{ "justifyContent": "space-around", "flexDirection": "row" }}>
-                {imageRow}
-            </View>
-            <View style={{ "justifyContent": "space-around", "flexDirection": "row" }}>
-                {imageRow}
-            </View>
-            <View style={{ "justifyContent": "space-around", "flexDirection": "row" }}>
-                {imageRow}
-            </View>
-            <View style={{ "justifyContent": "space-around", "flexDirection": "row" }}>
-                {imageRow}
-            </View>
-            <View style={{ "justifyContent": "space-around", "flexDirection": "row" }}>
-                {imageRow}
-            </View>
+            {allImages}
         </ScrollView>
     )
 }
